@@ -4,12 +4,14 @@ const userService = require('../services/userService');
 
 router.get('/', handleResponse(userService.getAllUsers));
 router.get('/:id',
-  validateUtility({ tokenValidador: true }),
+  validateUtility({ tokenValidador: true, idValidator: true }, 'User'),
   handleResponse(userService.getUserById));
 
 router.post('/login', handleResponse(userService.login));
 router.post('/register', handleResponse(userService.register));
-// router.get('/logout', userService.logout);
+router.get('/logout', 
+  validateUtility({ tokenValidador: true }),
+  handleResponse(userService.logout));
 
 
 module.exports = router;

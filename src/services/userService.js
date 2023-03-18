@@ -85,6 +85,11 @@ exports.login = async ({
   return token;
 };
 
+// Logout
+exports.logout = async (req, res) => {
+  res.status(204).json({});
+};
+
 // Get a user
 exports.getUserById = async (id) => {
   // Find user and validate

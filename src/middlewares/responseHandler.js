@@ -1,5 +1,6 @@
-const {verifyToken} = require('../utils/user');
-const {sendError} = require('../utils/sendError');
+const { verifyToken } = require('../utils/user');
+const { sendError } = require('../utils/sendError');
+const { isValidObjectId } = require('mongoose');
 
 exports.handleResponse = (cb, msg) => {
   return async (req, res, next) => {
@@ -18,7 +19,7 @@ exports.handleResponse = (cb, msg) => {
     }
   };
 };
- 
+
 exports.validateUtility = (options, ref) => {
   return async (req, res, next) => {
     const id = req.params.id;
@@ -32,12 +33,12 @@ exports.validateUtility = (options, ref) => {
         if (options.tokenValidator) {
           await verifyToken(req.headers);
         }
-        if (options.dataValidator) {
-          const data = await options.dataValidator(id);
-          if (!data) {
-            sendError(`${ref} doesn't exist in the database`, 404);
-          }
-        }
+        // if (options.dataValidator) {
+        //   const data = await options.dataValidator(id);
+        //   if (!data) {
+        //     sendError(`${ref} doesn't exist in the database`, 404);
+        //   }
+        // }
       }
       next();
     } catch (error) {
