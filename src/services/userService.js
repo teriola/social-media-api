@@ -1,37 +1,24 @@
 const bcrypt = require('bcrypt');
 const User = require('../models/User');
-<<<<<<< HEAD
-const {signToken}= require('../utils/auth');
-
-// Login
-exports.login = async (req, res) => {
-  try {
-    // Get data
-    const { email, password } = req.body;
-
-    // Validate
-    const user = await User.findOne({ email }).lean();
-    if (!user) {
-      throw Error({ message: 'Wrong username or password', code: 401 })
-    }
-    const validPassword = await bcrypt.compare(password, user.password);
-    if (!validPassword) {
-      throw Error({ message: 'Wrong username or password', code: 401 });
-    }
-
-    // Sign jwt token for security
-    const token = await signToken(user);
-
-    // Send response
-    res.status(200).json(token);
-  } catch (err) {
-    res.status(400).json(err);
-  }
-};
-=======
 const { sendError } = require('../utils/sendError');
 const { signToken } = require('../utils/user');
->>>>>>> a65fda7 (fix errors and add error handling)
+
+// Login
+exports.login = async ({ email, password }) => {
+  // Validate
+  const user = await User.findOne({ email }).lean();
+  if (!user) {
+    sendError('Wrong username or password', 401);
+  }
+  const validPassword = await bcrypt.compare(password, user.password);
+  if (!validPassword) {
+    sendError('Wrong username or password', 401);
+  }
+
+  // Sign jwt token for security and return it
+  const token = await signToken(user);
+  return token;
+};
 
 // Register
 exports.register = async ({
@@ -63,7 +50,6 @@ exports.register = async ({
   return token;
 };
 
-<<<<<<< HEAD
 // Get all users
 exports.getAllUsers = async (req, res) => {
   try {
@@ -74,10 +60,12 @@ exports.getAllUsers = async (req, res) => {
     res.status(200).json(users);
   } catch (err) {
     res.status(400).json(err);
-=======
+  }
+}
+
 // Login
 exports.login = async ({
-  email, 
+  email,
   password,
 }) => {
   // Get user from db
@@ -86,7 +74,6 @@ exports.login = async ({
   // Validate
   if (!user) {
     sendError('Wrong username or password', 401);
->>>>>>> a65fda7 (fix errors and add error handling)
   }
   const validPassword = await bcrypt.compare(password, user.password);
   if (!validPassword) {
@@ -109,8 +96,6 @@ exports.getUserById = async (id) => {
   // Return response
   return user;
 };
-<<<<<<< HEAD
-=======
 
 // Get all users
 exports.getAllUsers = async () => {
@@ -120,4 +105,3 @@ exports.getAllUsers = async () => {
   }
   return users;
 };
->>>>>>> a65fda7 (fix errors and add error handling)
