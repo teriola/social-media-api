@@ -1,5 +1,5 @@
 const { verifyToken } = require('../utils/user');
-const { sendError } = require('../utils/sendError');
+const { sendError } = require('../utils/util');
 const { isValidObjectId } = require('mongoose');
 
 exports.handleResponse = (cb, msg) => {
