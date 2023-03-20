@@ -11,6 +11,7 @@ exports.handleResponse = (cb, msg) => {
       } else if (req.params.id && !req.body) {
         data = await cb(req.params.id);
       } else {
+        console.log(req.body);
         data = await cb(req.body);
       }
       res.status(200).json(data ? data : { message: msg });
@@ -31,7 +32,9 @@ exports.validateUtility = (options, ref) => {
           }
         }
         if (options.tokenValidator) {
+          console.log('verify');
           await verifyToken(req.headers);
+          console.log('verifiedj');
         }
         // if (options.dataValidator) {
         //   const data = await options.dataValidator(id);
