@@ -1,4 +1,4 @@
-const { Schema, model } = require('mongoose');
+const { Schema, model, Types: { ObjectId } } = require('mongoose');
 
 const UserSchema = new Schema({
     // Required
@@ -16,6 +16,7 @@ const UserSchema = new Schema({
         type: String,
         required: true,
         max: 30,
+        match: [/^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/, 'Invalid email format'],
     },
     password: {
         type: String,
@@ -33,9 +34,11 @@ const UserSchema = new Schema({
         default: '',
         match: [/^https?:\/\//, 'Invalid profile picture format'],
     },
-    friends: {
-        type: Array,
-        default: [],
+    friends: [{ type: ObjectId, ref: 'post' }],
+    posts: [{ type: ObjectId, ref: 'post' }],
+    description: {
+        type: String,
+        maxLength: [100, 'Description is too long'],
     },
 });
 
