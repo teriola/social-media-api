@@ -4,7 +4,8 @@ exports.getAllPosts = async () => {
     return Post.find().lean();
 };
 exports.getPostById = async (id) => {
-    return Post.findById(id).populate('_owner', ['text', 'picture']).lean();
+    const post = Post.findById(id);
+    console.log(post);
 };
 exports.deletePost = async (id) => {
     await Post.findByIdAndRemove(id);
