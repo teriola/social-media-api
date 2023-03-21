@@ -51,3 +51,12 @@ exports.getAllUsers = async () => {
   const users = await User.find();
   return users.map(user => createPayload(user));
 };
+exports.getUserBookmarks = async (userId) => {
+  console.log(userId);
+  const user = await User.findById(userId).populate('bookmarks');
+  return user.bookmarks;
+};
+exports.getUserFriends = async (userId) => {
+  const user = await User.findById(userId).populate('friends');
+  return user.friends;
+}

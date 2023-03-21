@@ -6,28 +6,22 @@ exports.getAllPosts = async () => {
     return posts;
 };
 exports.getPostsByUser = async (userId) => {
-    console.log(userId);
-    const posts = await User.findById(userId);
-    console.log(posts);
+    const posts = await Post.find({ _owner: userId });
     return posts;
 };
 exports.getPostById = async (id) => {
     const post = await Post.findById(id);
+    return post;
+};
+exports.createPost = async ({ text, picture, ownerId }) => {
+    const post = new Post({ text, picture, _owner: ownerId });
+    await post.save();
     console.log(post);
+    return post;
 };
-exports.deletePost = async (id) => {
-    await Post.findByIdAndRemove(id);
-};
-exports.editPost = async (id, data) => {
-    await Post.findByIdAndUpdate(id, data, { runValidators: true });
-};
-exports.createPost = async (req, res, next) => {
-    try {
-        const { text, picture, ownerId } = req.body;
-        const post = new Post({ text, picture, _owner: ownerId });
-        await post.save();
-        res.status(200).json(post);
-    } catch (err) {
-        next(err)
-    }
-};
+// exports.deletePost = async (id) => {
+//     await Post.findByIdAndRemove(id);
+// };
+// exports.editPost = async (id, data) => {
+//     await Post.findByIdAndUpdate(id, data, { runValidators: true });
+// };

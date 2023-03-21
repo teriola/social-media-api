@@ -31,15 +31,16 @@ const UserSchema = new Schema({
     },
     coverPicture: {
         type: String,
-        default: '',
+        default: 'https://img.rawpixel.com/private/static/images/website/2022-05/rm422-076-x.jpg?w=1200&h=1200&dpr=1&fit=clip&crop=default&fm=jpg&q=75&vib=3&con=3&usm=15&cs=srgb&bg=F4F4F3&ixlib=js-2.2.1&s=444e119094ef45a3248aa529fb696b2b',
         match: [/^https?:\/\//, 'Invalid profile picture format'],
     },
-    friends: [{ type: ObjectId, ref: 'post' }],
-    posts: [{ type: ObjectId, ref: 'post' }],
+    friends: [{ type: ObjectId, ref: 'Post' }],
     description: {
         type: String,
+        default: '',
         maxLength: [100, 'Description is too long'],
     },
+    bookmarks: [{ type: ObjectId, ref: 'Post' }]
 });
 
 const User = model('User', UserSchema);
