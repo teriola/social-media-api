@@ -1,10 +1,16 @@
 const Post = require('../models/Post');
+const User = require('../models/User');
 
 exports.getAllPosts = async () => {
-    return Post.find().lean();
+    const posts = await Post.find().populate('_owner', ['profilePicture', 'firstName', 'lastName']).lean();
+    return posts;
+};
+exports.getPostsByUser = async (userId) => {
+    const posts = await User.find(userId).populate('posts', ['text', 'pictute', 'createdOn']);
+    return posts;
 };
 exports.getPostById = async (id) => {
-    const post = Post.findById(id);
+    const post = await Post.findById(id);
     console.log(post);
 };
 exports.deletePost = async (id) => {

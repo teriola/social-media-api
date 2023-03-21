@@ -4,6 +4,7 @@ const postService = require('../services/postService');
 
 router.get('/', handleResponse(postService.getAllPosts));
 router.post('/', postService.createPost);
+router.get('/user/:id', handleResponse(postService.getPostsByUser));
 
 // router.post('/register', handleResponse(postService.register));
 // router.get('/logout', validateUtility({ tokenValidador: true }), postService.logout);

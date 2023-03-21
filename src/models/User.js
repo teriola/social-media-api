@@ -26,7 +26,7 @@ const UserSchema = new Schema({
     // Non-required
     profilePicture: {
         type: String,
-        default: '',
+        default: 'https://www.refugee-action.org.uk/wp-content/uploads/2016/10/anonymous-user.png',
         match: [/^https?:\/\//, 'Invalid profile picture format'],
     },
     coverPicture: {
@@ -42,6 +42,6 @@ const UserSchema = new Schema({
     },
 });
 
-const User = model('user', UserSchema);
+const User = model('User', UserSchema);
 
 module.exports = User;

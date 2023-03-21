@@ -9,9 +9,13 @@ const PostSchema = new Schema({
         type: String,
         match: [/^https?:\/\//, 'Invalid profile picture format'],
     },
+    createdOn: {
+        type: String,
+        default: new Date().toISOString(),
+    },
     _owner: { type: ObjectId, ref: 'User' }
 });
 
-const Post = model('post', PostSchema);
+const Post = model('Post', PostSchema);
 
 module.exports = Post;
