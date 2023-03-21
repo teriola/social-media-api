@@ -6,7 +6,9 @@ exports.getAllPosts = async () => {
     return posts;
 };
 exports.getPostsByUser = async (userId) => {
-    const posts = await User.find(userId).populate('posts', ['text', 'pictute', 'createdOn']);
+    console.log(userId);
+    const posts = await User.findById(userId);
+    console.log(posts);
     return posts;
 };
 exports.getPostById = async (id) => {
