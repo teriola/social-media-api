@@ -13,6 +13,10 @@ const PostSchema = new Schema({
         type: String,
         default: new Date().toISOString(),
     },
+    likes:{
+        type: Number,
+        default: 0,
+    },
     _owner: { type: ObjectId, ref: 'User' }
 });
 

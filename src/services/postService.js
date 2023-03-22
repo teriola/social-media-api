@@ -6,7 +6,7 @@ exports.getAllPosts = async () => {
     return posts;
 };
 exports.getPostsByUser = async (userId) => {
-    const posts = await Post.find({ _owner: userId });
+    const posts = await Post.find({ _owner: userId }).populate('_owner', ['profilePicture', 'firstName', 'lastName']);
     return posts;
 };
 exports.getPostById = async (id) => {
@@ -19,9 +19,13 @@ exports.createPost = async ({ text, picture, ownerId }) => {
     console.log(post);
     return post;
 };
+exports.editPost = async (id, data) => {
+    await Post.findByIdAndUpdate(id, data, { runValidators: true });
+};
+
+// exports.likePost = async (postId, data) => {
+//     await Post.findByIdAndUpdate(postId, data);
+// }
 // exports.deletePost = async (id) => {
 //     await Post.findByIdAndRemove(id);
-// };
-// exports.editPost = async (id, data) => {
-//     await Post.findByIdAndUpdate(id, data, { runValidators: true });
 // };
