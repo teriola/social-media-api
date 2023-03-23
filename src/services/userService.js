@@ -52,7 +52,6 @@ exports.getAllUsers = async () => {
   return users.map(user => createPayload(user));
 };
 exports.getUserBookmarks = async (userId) => {
-  console.log(userId);
   const user = await User.findById(userId).populate('bookmarks');
   return user.bookmarks;
 };
