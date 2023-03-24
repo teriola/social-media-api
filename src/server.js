@@ -12,7 +12,7 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 
 // Import routes and error handler
-// app.use('/users', userRoutes);
+app.use('/users', require('./routes/userRoutes'));
 app.use('/posts', require('./routes/postRoutes'));
 app.use(errorHandler);
 

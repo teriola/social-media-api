@@ -14,7 +14,11 @@ const postSchema = new Schema({
     type: Number,
     default: 0,
   },
-  _owner: { type: ObjectId, ref: 'User' }
+  _owner: {
+    type: ObjectId,
+    required: true,
+    ref: 'User'
+  }
 }, {
   timestamps: true,
 });
