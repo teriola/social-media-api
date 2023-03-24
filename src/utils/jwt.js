@@ -1,28 +1,25 @@
 const util = require('util');
 const jsonwebtoken = require('jsonwebtoken');
 const config = require('../config');
-const User = require('../models/User');
 
 const jwt = {
   sign: util.promisify(jsonwebtoken.sign),
-  virify: util.promisify(jsonwebtoken.verify),
+  verify: util.promisify(jsonwebtoken.verify),
 };
 
-exports.signToken = async ({ _id, email, firstName, lastName }) => {
-  return jwt.sign({ _id, email, firstName, lastName }, config.SECRET, { expiresIn: '24h' });
+exports.signToken = async (_id) => {
+  console.log(_id);
+  return await jwt.sign({ _id }, config.SECRET, {
+    expiresIn: '30d',
+  });
 };
 
-exports.verifyToken = async (headers) => {
-  const token = headers['x-auth'];
+exports.decodeToken = async (token) => {
   if (!token) {
-    sendError('Not authorized', 401);
+    throw new Error('Not authorized, no token');
   }
   const decodedUser = await jwt.verify(token, config.SECRET);
-  const user = await User.findById(decodedUser._id);
-  if (!user) {
-    sendError('Not authorized', 401);
-  }
-  return user;
+  return decodedUser;
 };
 
 exports.createPayload = (user, token) => {
