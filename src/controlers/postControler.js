@@ -1,13 +1,31 @@
 const asyncHandler = require("express-async-handler");
 const Post = require("../models/Post");
+const User = require("../models/User");
 
 // Get posts
 // GET /posts
 // Public
 const getPosts = asyncHandler(async (req, res) => {
   const posts = await Post.find().populate('_owner', ['_id', 'firstName', 'lastName', 'profilePicture']);
+  res.status(200).json(posts);
+});
+
+// Get posts for user
+// GET /posts/user/:userId
+// Public
+const getUserPosts = asyncHandler(async (req, res) => {
+  const posts = await Post.find({ _owner: req.params.userId }).populate('_owner', ['_id', 'firstName', 'lastName', 'profilePicture']);
   console.log(posts);
   res.status(200).json(posts);
+});
+
+// Get post
+// GET /posts/:id
+// Public
+const getPost = asyncHandler(async (req, res) => {
+  const post = await Post.findById(req.params.id);
+
+  res.status(200).json(post);
 });
 
 // Set post
@@ -22,7 +40,11 @@ const setPost = asyncHandler(async (req, res) => {
   const post = await Post.create({
     text,
     picture,
+    _owner: req.user._id,
   });
+
+  const user = await User.findById(req.user._id);
+  user.posts.push(post);
 
   res.status(200).json(post);
 });
@@ -58,6 +80,8 @@ const deletePost = asyncHandler(async (req, res) => {
 
 module.exports = {
   getPosts,
+  getPost,
+  getUserPosts,
   setPost,
   updatePost,
   deletePost,

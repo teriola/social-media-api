@@ -12,6 +12,10 @@ const registerUser = asyncHandler(async (req, res) => {
     res.status(400);
     throw new Error('All fields are required');
   }
+  if (password.length < 6){
+    res.status(400);
+    throw new Error('Password is too short');
+  }
   if (password !== rePassword) {
     res.status(400);
     throw new Error('Passwords must match');
@@ -67,11 +71,11 @@ const loginUser = asyncHandler(async (req, res) => {
   }
 });
 
-// Get user
+// Get user by id
 // GET /users/:id
-// Private
-const getMe = asyncHandler(async (req, res) => {
-  const { _id, name, surname, profilePicture } = await User.findById(req.user.id);
+// Public
+const getUserById = asyncHandler(async (req, res) => {
+  const { _id, name, surname, profilePicture } = await User.findById(req.params.id);
 
   res.status(200).json({
     _id,
@@ -81,16 +85,24 @@ const getMe = asyncHandler(async (req, res) => {
   });
 });
 
-// // Delete post
-// // DELETE /posts/:id
-// // Private
-// const deletePost = asyncHandler(async (req, res) => {
+// Get user
+// GET /users/me
+// Private
+const getMe = asyncHandler(async (req, res) => {
+  const { _id, name, surname, profilePicture } = await User.findById(req.user._id);
 
-// });
+  res.status(200).json({
+    _id,
+    name,
+    surname,
+    profilePicture,
+  });
+});
 
 module.exports = {
   registerUser,
   loginUser,
+  getUserById,
   getMe,
 };
 

@@ -8,29 +8,27 @@ const jwt = {
 };
 
 exports.signToken = async (_id) => {
-  console.log(_id);
   return await jwt.sign({ _id }, config.SECRET, {
     expiresIn: '30d',
   });
 };
 
 exports.decodeToken = async (token) => {
-  if (!token) {
-    throw new Error('Not authorized, no token');
-  }
+  console.log(token);
   const decodedUser = await jwt.verify(token, config.SECRET);
+  console.log(decodedUser);
   return decodedUser;
 };
 
-exports.createPayload = (user, token) => {
-  const { _id, email, firstName, lastName, profilePicture, coverPicture, } = user;
-  return {
-    _id,
-    email,
-    firstName,
-    lastName,
-    profilePicture,
-    coverPicture,
-    accessToken: token,
-  };
-};
+// exports.createPayload = (user, token) => {
+//   const { _id, email, firstName, lastName, profilePicture, coverPicture, } = user;
+//   return {
+//     _id,
+//     email,
+//     firstName,
+//     lastName,
+//     profilePicture,
+//     coverPicture,
+//     accessToken: token,
+//   };
+// };

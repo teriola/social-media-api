@@ -3,27 +3,25 @@ const User = require("../models/User");
 const { decodeToken } = require("../utils/jwt");
 
 const protect = asyncHandler(async (req, res, next) => {
-    const authorization = req.headers.authorization;
-    let token;
+  const authorization = req.headers.authorization;
 
-    if (authorization) {
-        try {
-            // Verify token
-            const decoded = await decodeToken(authorization);
+  if (authorization) {
+    try {
+      // Verify token
+      const decoded = await decodeToken(authorization);
 
-            // Get user and set it
-            req.user = await User.findById(decoded._id).select('-password');
+      // Get user and set it
+      req.user = await User.findById(decoded._id).select('-password');
 
-            next();
-        } catch (err) {
-            console.log(err);
-            res.status(401);
-            throw new Error('Not authorized')
-        }
+      next();
+    } catch (err) {
+      console.log(err);
+      res.status(401);
+      throw new Error('Not authorized')
     }
-    // if (!token) {
-    //     res.status(401);
-    //     throw new Error('Not authorized, no token')
-    // }
+  } else{
+    res.status(401);
+    throw new Error('Not authorized, no token')
+  }
 });
 module.exports = protect;
