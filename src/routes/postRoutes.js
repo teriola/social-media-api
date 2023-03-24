@@ -1,9 +1,10 @@
 const router = require('express').Router();
-const { getPosts, setPost, updatePost, deletePost, getUserPosts, getPost } = require('../controlers/postControler');
+const { getPosts, setPost, updatePost, deletePost, getUserPosts, getPost, getUserBookmarks, setUserBookmark } = require('../controlers/postControler');
 const protect = require('../middlewares/authMiddleware');
 
 router.route('/').get(getPosts).post(protect, setPost);
-router.route('/:id').get(getPost).put(protect, updatePost).delete(protect, deletePost);
+router.route('/bookmarks').get(protect, getUserBookmarks).post(protect, setUserBookmark);
 router.get('/user/:userId', getUserPosts);
+router.route('/:id').get(getPost).put(protect, updatePost).delete(protect, deletePost);
 
 module.exports = router;

@@ -102,24 +102,7 @@ const getMe = asyncHandler(async (req, res) => {
 module.exports = {
   registerUser,
   loginUser,
+
   getUserById,
   getMe,
 };
-
-// router.get('/user/:id', handleResponse(postService.getPostsByUser));
-// router.get('/bookmark/:id', handleResponse(postService.getBookmarksByUser));
-// router.get('/:id', validateUtility({ idValidator: true }, 'Post'), handleResponse(postService.getPostById));
-
-
-
-// router.get('/', handleResponse(userService.getAllUsers));
-// router.post('/login', handleResponse(userService.login));
-// router.post('/register', handleResponse(userService.register));
-// router.get('/logout', validateUtility({ tokenValidador: true }), userService.logout);
-// router.get('/:id/bookmarks', handleResponse(userService.getUserBookmarks));
-// router.get('/:id/friends', handleResponse(userService.getUserFriends));
-// router.get('/:id',
-//   validateUtility({ tokenValidador: true, idValidator: true }, 'User'),
-//   handleResponse(userService.getUserById));
-
-// module.exports = router;

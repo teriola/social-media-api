@@ -19,6 +19,25 @@ const getUserPosts = asyncHandler(async (req, res) => {
   res.status(200).json(posts);
 });
 
+// Get bookmarks for user
+// GET /posts/bookmarks
+// Private
+const getUserBookmarks = asyncHandler(async (req, res) => {
+  const user = await User.findById(req.user._id).populate('bookmarks');
+  res.status(200).json(user.bookmarks);
+});
+
+// Set bookmark for user
+// POST /posts/bookmarks
+// Private
+const setUserBookmark = asyncHandler(async (req, res) => {
+  const { postId } = req.body;
+  const user = await User.findById(req.user._id);
+  user.bookmarks.push(postId);
+  console.log(user);
+  res.status(200).json({ message: 'Bookmark added'});
+});
+
 // Get post
 // GET /posts/:id
 // Public
@@ -82,11 +101,11 @@ module.exports = {
   getPosts,
   getPost,
   getUserPosts,
+  getUserBookmarks,
+
   setPost,
+  setUserBookmark,
+
   updatePost,
   deletePost,
 };
-
-// router.get('/user/:id', handleResponse(postService.getPostsByUser));
-// router.get('/bookmark/:id', handleResponse(postService.getBookmarksByUser));
-// router.get('/:id', validateUtility({ idValidator: true }, 'Post'), handleResponse(postService.getPostById));

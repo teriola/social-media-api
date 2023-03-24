@@ -14,9 +14,7 @@ exports.signToken = async (_id) => {
 };
 
 exports.decodeToken = async (token) => {
-  console.log(token);
   const decodedUser = await jwt.verify(token, config.SECRET);
-  console.log(decodedUser);
   return decodedUser;
 };
 
