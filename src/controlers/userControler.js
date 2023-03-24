@@ -22,7 +22,7 @@ const registerUser = asyncHandler(async (req, res) => {
     throw new Error('User already exists');
   }
   const salt = bcrypt.genSalt(10);
-  const hashedPassword = bcrypt.hash(password, salt);
+  const hashedPassword = await bcrypt.hash(password, 10);
 
   const user = await User.create({
     name,
@@ -48,8 +48,10 @@ const registerUser = asyncHandler(async (req, res) => {
 // Public
 const loginUser = asyncHandler(async (req, res) => {
   const { email, password } = req.body;
-  const user = await User.getOne({ email });
+  const user = await User.findOne({ email });
+
   if (user && (await bcrypt.compare(password, user.password))) {
+    // Payload
     res.json({
       _id: user.id,
       name: user.name,
@@ -65,9 +67,9 @@ const loginUser = asyncHandler(async (req, res) => {
 // Update post
 // PUT /posts/:id
 // Private
-// const updatePost = asyncHandler(async (req, res) => {
+const updatePost = asyncHandler(async (req, res) => {
 
-// });
+});
 
 // // Delete post
 // // DELETE /posts/:id
