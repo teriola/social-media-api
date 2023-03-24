@@ -77,7 +77,7 @@ const loginUser = asyncHandler(async (req, res) => {
 // GET /users/logout
 // Private
 const logoutUser = asyncHandler(async (req, res) => {
-  
+  res.status(204).json({});
 });
 
 // Get user by id
