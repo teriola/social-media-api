@@ -1,65 +1,72 @@
 const asyncHandler = require("express-async-handler");
+const bcrypt = require('bcrypt');
+const jwt = require('../utils/jwt');
 const User = require("../models/User");
 
-// Get users
-// GET /users
-// Public
-const getUsers = asyncHandler(async (req, res) => {
-  const users = await User.find();
-  res.status(200).json(users);
-});
-
-// Set user
+// Register new user
 // POST /users
 // Public
-const setPost = asyncHandler(async (req, res) => {
-  const { text, picture } = req.body;
-  if (!text || !picture) {
+const registerUser = asyncHandler(async (req, res) => {
+  const { name, surname, email, password, repeatPassword } = req.body;
+  if (!name || !surname || !email || !password || !repeatPassword) {
     res.status(400);
     throw new Error('All fields are required');
   }
-  const post = await Post.create({
-    text,
-    picture,
+  if (password !== repeatPassword) {
+    res.status(400);
+    throw new Error('Passwords must match');
+  }
+  const userExists = await User.findOne({ email });
+  if (userExists) {
+    res.status(400);
+    throw new Error('User already exists');
+  }
+  const salt = bcrypt.genSalt(10);
+  const hashedPassword = bcrypt.hash(password, salt);
+
+  const user = await User.create({
+    name,
+    surname,
+    email,
+    password: hashedPassword,
   });
 
-  res.status(200).json(post);
+  if (user) {
+    res.status(201).json({
+      _id: user.id,
+      name: user.name,
+      email: user.email,
+    });
+  } else {
+    res.status(400);
+    throw new Error('Invalid user data');
+  }
+});
+
+// Loign user
+// POST /users/login
+// Public
+const loginUser = asyncHandler(async (req, res) => {
+
 });
 
 // Update post
 // PUT /posts/:id
 // Private
-const updatePost = asyncHandler(async (req, res) => {
-  const post = await Post.findById(req.params.id);
-  if (!post) {
-    res.status(400);
-    throw new Error('Post not found');
-  }
+// const updatePost = asyncHandler(async (req, res) => {
 
-  const updatedPost = await Post.findOneAndUpdate(req.params.id, req.body, { new: true });
-  res.status(200).json(updatedPost);
-});
+// });
 
-// Delete post
-// DELETE /posts/:id
-// Private
-const deletePost = asyncHandler(async (req, res) => {
-  const _id = req.params.id;
-  const post = await Post.findById(id);
-  if (!post) {
-    res.status(400);
-    throw new Error('Post not found');
-  }
-  await Post.deleteOne({ _id });
+// // Delete post
+// // DELETE /posts/:id
+// // Private
+// const deletePost = asyncHandler(async (req, res) => {
 
-  res.status(200).json({ id });
-});
+// });
 
 module.exports = {
-  getPosts,
-  setPost,
-  updatePost,
-  deletePost,
+  registerUser,
+  loginUser,
 };
 
 // router.get('/user/:id', handleResponse(postService.getPostsByUser));

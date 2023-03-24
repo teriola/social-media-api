@@ -1,7 +1,6 @@
 const util = require('util');
 const jsonwebtoken = require('jsonwebtoken');
 const config = require('../config');
-const { sendError } = require('./util');
 const User = require('../models/User');
 
 const jwt = {
