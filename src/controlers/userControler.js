@@ -82,7 +82,7 @@ const logoutUser = asyncHandler(async (req, res) => {
 // GET /users/:id
 // Public
 const getUserById = asyncHandler(async (req, res) => {
-  const { _id, name, surname, profilePicture } = await User.findById(req.params.id);
+  const { _id, name, surname, profilePicture, coverPicture } = await User.findById(req.params.id);
 
   res.status(200).json({
     _id,
