@@ -93,6 +93,16 @@ const getUserById = asyncHandler(async (req, res) => {
   });
 });
 
+// Get friends
+// GET /users/:id/friends
+// Public
+const getUserFriends = asyncHandler(async (req, res) => {
+  const user = await User.findById(req.params.id).populate('friends');
+
+  console.log(user);
+  res.status(200).json(user.friends);
+});
+
 // Get user
 // GET /users/me
 // Private
@@ -113,5 +123,6 @@ module.exports = {
   logoutUser,
 
   getUserById,
+  getUserFriends,
   getMe,
 };
