@@ -5,7 +5,8 @@ const Post = require("../models/Post");
 // GET /posts
 // Public
 const getPosts = asyncHandler(async (req, res) => {
-  const posts = await Post.find();
+  const posts = await Post.find().populate('_owner', ['_id', 'firstName', 'lastName', 'profilePicture']);
+  console.log(posts);
   res.status(200).json(posts);
 });
 
@@ -14,9 +15,9 @@ const getPosts = asyncHandler(async (req, res) => {
 // Private
 const setPost = asyncHandler(async (req, res) => {
   const { text, picture } = req.body;
-  if(!text || !picture) {
+  if (!text || !picture) {
     res.status(400);
-    throw new Error('All fields are required')
+    throw new Error('All fields are required');
   }
   const post = await Post.create({
     text,
@@ -31,12 +32,12 @@ const setPost = asyncHandler(async (req, res) => {
 // Private
 const updatePost = asyncHandler(async (req, res) => {
   const post = await Post.findById(req.params.id);
-  if(!post){
+  if (!post) {
     res.status(400);
     throw new Error('Post not found');
   }
 
-  const updatedPost = await Post.findOneAndUpdate(req.params.id, req.body, { new:true });
+  const updatedPost = await Post.findOneAndUpdate(req.params.id, req.body, { new: true });
   res.status(200).json(updatedPost);
 });
 
@@ -44,30 +45,24 @@ const updatePost = asyncHandler(async (req, res) => {
 // DELETE /posts/:id
 // Private
 const deletePost = asyncHandler(async (req, res) => {
-  const post = await Post.findById(req.params.id);
-  if(!post){
+  const _id = req.params.id;
+  const post = await Post.findById(id);
+  if (!post) {
     res.status(400);
     throw new Error('Post not found');
   }
-  await post.remove();
+  await Post.deleteOne({ _id });
 
-  res.status(200).json({ id: req.params.id });
+  res.status(200).json({ id });
 });
 
 module.exports = {
   getPosts,
   setPost,
-  updatePost, 
+  updatePost,
   deletePost,
 };
 
-// router.get('/', handleResponse(postService.getAllPosts));
-// router.post('/', handleResponse(postService.createPost));
-//
 // router.get('/user/:id', handleResponse(postService.getPostsByUser));
 // router.get('/bookmark/:id', handleResponse(postService.getBookmarksByUser));
-// router.post('/like/:id', handleResponse(postService.editPost));
-//
-// router.get('/:id',
-//   validateUtility({ idValidator: true }, 'Post'),
-//   handleResponse(postService.getPostById));
+// router.get('/:id', validateUtility({ idValidator: true }, 'Post'), handleResponse(postService.getPostById));

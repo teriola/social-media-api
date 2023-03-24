@@ -10,16 +10,14 @@ const postSchema = new Schema({
     required: [true, 'Please add a picture'],
     match: [/^https?:\/\//, 'Invalid profile picture format'],
   },
-  likes:{
+  likes: {
     type: Number,
     default: 0,
   },
   _owner: { type: ObjectId, ref: 'User' }
-}, 
-  {
-    timestamps:true,
-  }
-);
+}, {
+  timestamps: true,
+});
 
 const Post = model('Post', postSchema);
 

@@ -1,7 +1,8 @@
 const config = require("../config");
 
 const errorHandler = (err, req, res, next) => {
-  const statusCode = res.status ? res.status : 500;
+  console.log(err.status);
+  const statusCode = err.status ? err.status : 500;
   res.status(statusCode);
 
   res.json({
@@ -10,6 +11,4 @@ const errorHandler = (err, req, res, next) => {
   });
 };
 
-module.exports = {
-  globalErrorHandler: errorHandler
-};
+module.exports = errorHandler;
