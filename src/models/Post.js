@@ -14,6 +14,10 @@ const postSchema = new Schema({
     type: Number,
     default: 0,
   },
+  comments: [{
+    type: ObjectId, 
+    ref: 'Comment',
+  }],
   _owner: {
     type: ObjectId,
     required: true,

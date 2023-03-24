@@ -34,6 +34,7 @@ const registerUser = asyncHandler(async (req, res) => {
     surname,
     email,
     password: hashedPassword,
+    theme: userExists.theme,
   });
 
   if (user) {
@@ -64,6 +65,7 @@ const loginUser = asyncHandler(async (req, res) => {
       accessToken: await signToken(user._id),
       surname: user.surname,
       profilePicture: user.profilePicture,
+      theme: user.theme,
     });
   } else {
     res.status(400);
@@ -82,7 +84,7 @@ const logoutUser = asyncHandler(async (req, res) => {
 // GET /users/:id
 // Public
 const getUserById = asyncHandler(async (req, res) => {
-  const { _id, name, surname, profilePicture, coverPicture } = await User.findById(req.params.id);
+  const { _id, name, surname, profilePicture, coverPicture, description } = await User.findById(req.params.id);
 
   res.status(200).json({
     _id,
@@ -90,6 +92,7 @@ const getUserById = asyncHandler(async (req, res) => {
     surname,
     profilePicture,
     coverPicture,
+    description,
   });
 });
 
@@ -99,7 +102,6 @@ const getUserById = asyncHandler(async (req, res) => {
 const getUserFriends = asyncHandler(async (req, res) => {
   const user = await User.findById(req.params.id).populate('friends');
 
-  console.log(user);
   res.status(200).json(user.friends);
 });
 

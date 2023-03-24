@@ -38,6 +38,11 @@ const userSchema = new Schema({
     default: '',
     maxLength: [100, 'Description is too long'],
   },
+  theme: {
+    type: String,
+    required: true,
+    default: 'white',
+  },
   posts: [{
     type: ObjectId,
     ref: 'Post',
