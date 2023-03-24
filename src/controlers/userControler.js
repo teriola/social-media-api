@@ -71,6 +71,13 @@ const loginUser = asyncHandler(async (req, res) => {
   }
 });
 
+// Logout user
+// GET /users/logout
+// Private
+const logoutUser = asyncHandler(async (req, res) => {
+  
+});
+
 // Get user by id
 // GET /users/:id
 // Public
@@ -82,6 +89,7 @@ const getUserById = asyncHandler(async (req, res) => {
     name,
     surname,
     profilePicture,
+    coverPicture,
   });
 });
 
@@ -102,6 +110,7 @@ const getMe = asyncHandler(async (req, res) => {
 module.exports = {
   registerUser,
   loginUser,
+  logoutUser,
 
   getUserById,
   getMe,
