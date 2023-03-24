@@ -47,7 +47,19 @@ const registerUser = asyncHandler(async (req, res) => {
 // POST /users/login
 // Public
 const loginUser = asyncHandler(async (req, res) => {
-
+  const { email, password } = req.body;
+  const user = await User.getOne({ email });
+  if (user && (await bcrypt.compare(password, user.password))) {
+    res.json({
+      _id: user.id,
+      name: user.name,
+      surname: user.surname,
+      profilePicture: user.profilePicture,
+    });
+  } else {
+    res.status(400);
+    throw new Error('Ivalid user data');
+  }
 });
 
 // Update post
