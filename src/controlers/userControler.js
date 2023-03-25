@@ -64,6 +64,7 @@ const loginUser = asyncHandler(async (req, res) => {
       accessToken: await signToken(user._id),
       surname: user.surname,
       profilePicture: user.profilePicture,
+      theme: user.theme,
     });
   } else {
     res.status(400);

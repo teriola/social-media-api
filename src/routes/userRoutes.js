@@ -7,6 +7,6 @@ router.post('/login', loginUser);
 router.get('/me', protect, getMe);
 router.get('/:id/friends', getUserFriends);
 router.get('/:id', getUserById);
-router.get('/logout', logoutUser);
+router.get('/logout', protect, logoutUser);
 
 module.exports = router;

@@ -15,7 +15,6 @@ const getPosts = asyncHandler(async (req, res) => {
 // Public
 const getUserPosts = asyncHandler(async (req, res) => {
   const posts = await Post.find({ _owner: req.params.userId }).populate('_owner', ['_id', 'firstName', 'lastName', 'profilePicture']);
-  console.log(posts);
   res.status(200).json(posts);
 });
 
@@ -34,8 +33,6 @@ const setUserBookmark = asyncHandler(async (req, res) => {
   const { postId } = req.body;
   const user = await User.findById(req.user._id);
   user.bookmarks.push(postId);
-  console.log(user);
-  res.status(200).json({ message: 'Bookmark added'});
 });
 
 // Get post
@@ -97,6 +94,30 @@ const deletePost = asyncHandler(async (req, res) => {
   res.status(200).json({ id });
 });
 
+// Like post
+// POST /posts/:id/like
+// Private
+const likePost = asyncHandler(async (req, res) => {
+  const post = await Post.findById(req.params.id);
+  post.likedUsers.push(req.user._id);
+  post.likes += 1;
+  post.save();
+
+  res.status(200).json({message: 'liked post'});
+});
+
+// Remove like
+// POST /posts/:id/unlike
+// Private
+const removeLikePost = asyncHandler(async (req, res) => {
+  const post = await Post.findById(req.params.id);
+  post.likedUsers.splice(post.likedUsers.indexOf(req.user._id), 1);
+  post.likes -= 1;
+  post.save();
+
+  res.status(200).json({message: 'unliked post'});
+});
+
 module.exports = {
   getPosts,
   getPost,
@@ -106,6 +127,8 @@ module.exports = {
   setPost,
   setUserBookmark,
 
+  likePost,
+  removeLikePost,
   updatePost,
   deletePost,
 };
