@@ -21,7 +21,6 @@ const registerUser = asyncHandler(async (req, res) => {
     throw new Error('Passwords must match');
   }
   const userExists = await User.findOne({ email });
-  console.log(userExists);
   if (userExists) {
     res.status(400);
     throw new Error('User already exists');
@@ -34,7 +33,6 @@ const registerUser = asyncHandler(async (req, res) => {
     surname,
     email,
     password: hashedPassword,
-    theme: userExists.theme,
   });
 
   if (user) {
@@ -65,7 +63,6 @@ const loginUser = asyncHandler(async (req, res) => {
       accessToken: await signToken(user._id),
       surname: user.surname,
       profilePicture: user.profilePicture,
-      theme: user.theme,
     });
   } else {
     res.status(400);
