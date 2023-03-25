@@ -40,6 +40,7 @@ const registerUser = asyncHandler(async (req, res) => {
       _id: user.id,
       name: user.name,
       email: user.email,
+      profilePicture: user.profilePicture,
       accessToken: await signToken(user._id),
     });
   } else {
