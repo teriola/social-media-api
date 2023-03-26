@@ -6,7 +6,7 @@ const User = require("../models/User");
 // GET /posts
 // Public
 const getPosts = asyncHandler(async (req, res) => {
-  const posts = await Post.find().populate('_owner', ['_id', 'firstName', 'lastName', 'profilePicture']);
+  const posts = await Post.find().populate('_owner', ['_id', 'name', 'surname', 'profilePicture']);
   res.status(200).json(posts);
 });
 
@@ -14,7 +14,7 @@ const getPosts = asyncHandler(async (req, res) => {
 // GET /posts/user/:userId
 // Public
 const getUserPosts = asyncHandler(async (req, res) => {
-  const posts = await Post.find({ _owner: req.params.userId }).populate('_owner', ['_id', 'firstName', 'lastName', 'profilePicture']);
+  const posts = await Post.find({ _owner: req.params.userId }).populate('_owner', ['_id', 'name', 'surname', 'profilePicture']);
   res.status(200).json(posts);
 });
 
@@ -22,7 +22,13 @@ const getUserPosts = asyncHandler(async (req, res) => {
 // GET /posts/bookmarks
 // Private
 const getUserBookmarks = asyncHandler(async (req, res) => {
-  const user = await User.findById(req.user._id).populate('bookmarks');
+  const user = await User.findById(req.user._id).populate({
+    path: 'bookmarks',
+    populate: {
+      path: '_owner',
+      select: 'name surname profilePicture'
+    }
+  });
   res.status(200).json(user.bookmarks);
 });
 
@@ -33,6 +39,9 @@ const setUserBookmark = asyncHandler(async (req, res) => {
   const { postId } = req.body;
   const user = await User.findById(req.user._id);
   user.bookmarks.push(postId);
+  console.log(user.bookmarks);
+  user.save();
+  res.status(200).json(user.bookmarks);
 });
 
 // Get post
@@ -99,11 +108,12 @@ const deletePost = asyncHandler(async (req, res) => {
 // Private
 const likePost = asyncHandler(async (req, res) => {
   const post = await Post.findById(req.params.id);
+  if (post.likedUsers.includes(req.user._id)) return;
   post.likedUsers.push(req.user._id);
   post.likes += 1;
   post.save();
 
-  res.status(200).json({message: 'liked post'});
+  res.status(200).json(post);
 });
 
 // Remove like
@@ -111,11 +121,12 @@ const likePost = asyncHandler(async (req, res) => {
 // Private
 const removeLikePost = asyncHandler(async (req, res) => {
   const post = await Post.findById(req.params.id);
+  if (!post.likedUsers.includes(req.user._id)) return;
   post.likedUsers.splice(post.likedUsers.indexOf(req.user._id), 1);
   post.likes -= 1;
   post.save();
 
-  res.status(200).json({message: 'unliked post'});
+  res.status(200).json(post);
 });
 
 module.exports = {

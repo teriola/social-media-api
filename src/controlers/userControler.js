@@ -54,7 +54,7 @@ const registerUser = asyncHandler(async (req, res) => {
 // Public
 const loginUser = asyncHandler(async (req, res) => {
   const { email, password } = req.body;
-  const user = await User.findOne({ email });
+  const user = await User.findOne({ email }).populate('bookmarks');
 
   if (user && (await bcrypt.compare(password, user.password))) {
     // Payload
@@ -65,6 +65,7 @@ const loginUser = asyncHandler(async (req, res) => {
       surname: user.surname,
       profilePicture: user.profilePicture,
       theme: user.theme,
+      bookmarks: user.bookmarks,
     });
   } else {
     res.status(400);
