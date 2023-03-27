@@ -4,7 +4,6 @@ const { decodeToken } = require("../utils/jwt");
 
 const protect = asyncHandler(async (req, res, next) => {
   const authorization = req.headers.authorization;
-  console.log()
 
   if (authorization) {
     try {

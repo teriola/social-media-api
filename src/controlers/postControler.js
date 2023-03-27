@@ -92,13 +92,18 @@ const updatePost = asyncHandler(async (req, res) => {
 // DELETE /posts/:id
 // Private
 const deletePost = asyncHandler(async (req, res) => {
-  const _id = req.params.id;
+  const id = req.params.id;
   const post = await Post.findById(id);
+
+  if (post._owner.toString() != req.user._id.toString()) {
+    res.status(401);
+    throw new Error('Not authorized')
+  }
   if (!post) {
     res.status(400);
     throw new Error('Post not found');
   }
-  await Post.deleteOne({ _id });
+  await Post.deleteOne({ _id: id });
 
   res.status(200).json({ id });
 });
