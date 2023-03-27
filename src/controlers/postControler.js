@@ -39,7 +39,6 @@ const setUserBookmark = asyncHandler(async (req, res) => {
   const { postId } = req.body;
   const user = await User.findById(req.user._id);
   user.bookmarks.push(postId);
-  console.log(user.bookmarks);
   user.save();
   res.status(200).json(user.bookmarks);
 });
@@ -66,12 +65,13 @@ const setPost = asyncHandler(async (req, res) => {
     text,
     picture,
     _owner: req.user._id,
-  });
-
+  })
   const user = await User.findById(req.user._id);
   user.posts.push(post);
 
-  res.status(200).json(post);
+  const populatedPost = await post.populate('_owner', ['profilePicture', 'name', 'surname']);
+
+  res.status(200).json(populatedPost);
 });
 
 // Update post
