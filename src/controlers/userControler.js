@@ -12,7 +12,7 @@ const registerUser = asyncHandler(async (req, res) => {
     res.status(400);
     throw new Error('All fields are required');
   }
-  if (password.length < 6){
+  if (password.length < 6) {
     res.status(400);
     throw new Error('Password is too short');
   }
@@ -119,10 +119,26 @@ const getMe = asyncHandler(async (req, res) => {
   });
 });
 
+// Patch user
+// PATCH /users/:userId
+// Private
+const patchUser = asyncHandler(async (req, res) => {
+  const user = await User.findById(req.params.userId);
+  if (!user) {
+    res.status(404);
+    throw new Error('User not found');
+  }
+  const updatedUser = await User.findByIdAndUpdate(req.params.userId, req.body);
+
+  res.status(200).json(updatedUser);
+});
+
 module.exports = {
   registerUser,
   loginUser,
   logoutUser,
+
+  patchUser,
 
   getUserById,
   getUserFriends,
