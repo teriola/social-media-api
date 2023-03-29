@@ -84,7 +84,7 @@ const updatePost = asyncHandler(async (req, res) => {
     throw new Error('Post not found');
   }
 
-  const updatedPost = await Post.findOneAndUpdate(req.params.id, req.body, { new: true });
+  const updatedPost = await Post.findOneAndUpdate(req.params.id, req.body, { new: true }).populate('_owner', ['profilePicture', 'name', 'surname']);
   res.status(200).json(updatedPost);
 });
 
