@@ -40,7 +40,22 @@ const setUserBookmark = asyncHandler(async (req, res) => {
   const user = await User.findById(req.user._id);
   user.bookmarks.push(postId);
   user.save();
-  res.status(200).json(user.bookmarks);
+  res.status(204).json({
+      message: "Bookmarked successfully",
+  });
+});
+
+// Remove bookmark for user
+// DELETE /posts/bookmarks
+// Private
+const removeUserBookmark = asyncHandler(async (req, res) => {
+  const { postId } = req.body;
+  const user = await User.findById(req.user._id);
+  user.bookmarks.splice(user.bookmarks.indexOf(postId), 1);
+  user.save();
+  res.status(204).json({
+      message: "Bookmark successfully removed",
+  });
 });
 
 // Get post
@@ -142,6 +157,7 @@ module.exports = {
 
   setPost,
   setUserBookmark,
+  removeUserBookmark,
 
   likePost,
   removeLikePost,
