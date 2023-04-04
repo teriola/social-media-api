@@ -1,6 +1,7 @@
 const asyncHandler = require("express-async-handler");
 const Post = require("../models/Post");
 const User = require("../models/User");
+const Comment = require("../models/Comment");
 
 // Get posts
 // GET /posts
@@ -149,6 +150,37 @@ const removeLikePost = asyncHandler(async (req, res) => {
   res.status(200).json(post);
 });
 
+// Post comment
+// POST /posts/:id/comment
+// Private
+const commentPost = asyncHandler(async (req, res) => {
+  const post = await Post.findById(req.params.id);
+  if (!post) {
+    res.status(404);
+    throw new Error('Post does not exist');
+  }
+  const comment = await Comment.create({
+    text: req.body.text,
+    _owner: req.user._id,
+  });
+  post.comments.push(comment._id);
+  post.save();
+  res.status(204).json({ message: 'Comment created'});
+});
+
+// Get comments
+// GET /posts/:id/comments
+// Public
+const getPostComments = asyncHandler(async (req, res) => {
+  const post = await Post.findById(req.params.id);
+  if(!post) {
+    res.status(404);
+    throw new Error('Post does not exist');
+  }
+  const populatedPost = await post.populate('comments');
+  res.json(populatedPost.comments);
+});
+
 module.exports = {
   getPosts,
   getPost,
@@ -158,6 +190,9 @@ module.exports = {
   setPost,
   setUserBookmark,
   removeUserBookmark,
+
+  commentPost,
+  getPostComments,
 
   likePost,
   removeLikePost,
