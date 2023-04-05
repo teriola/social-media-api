@@ -42,7 +42,7 @@ const setUserBookmark = asyncHandler(async (req, res) => {
   user.bookmarks.push(postId);
   user.save();
   res.status(204).json({
-      message: "Bookmarked successfully",
+    message: "Bookmarked successfully",
   });
 });
 
@@ -55,7 +55,7 @@ const removeUserBookmark = asyncHandler(async (req, res) => {
   user.bookmarks.splice(user.bookmarks.indexOf(postId), 1);
   user.save();
   res.status(204).json({
-      message: "Bookmark successfully removed",
+    message: "Bookmark successfully removed",
   });
 });
 
@@ -165,7 +165,7 @@ const commentPost = asyncHandler(async (req, res) => {
   });
   post.comments.push(comment._id);
   post.save();
-  res.status(204).json({ message: 'Comment created'});
+  res.status(204).json({ message: 'Comment created' });
 });
 
 // Get comments
@@ -173,11 +173,11 @@ const commentPost = asyncHandler(async (req, res) => {
 // Public
 const getPostComments = asyncHandler(async (req, res) => {
   const post = await Post.findById(req.params.id);
-  if(!post) {
+  if (!post) {
     res.status(404);
     throw new Error('Post does not exist');
   }
-  const populatedPost = await post.populate('comments');
+  const populatedPost = await post.populate('comments', ['_owner']);
   res.json(populatedPost.comments);
 });
 
