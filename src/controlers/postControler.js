@@ -177,8 +177,14 @@ const getPostComments = asyncHandler(async (req, res) => {
     res.status(404);
     throw new Error('Post does not exist');
   }
-  const populatedPost = await post.populate('comments', ['_owner']);
-  res.json(populatedPost.comments);
+  const populatedPost = await post.populate({
+    path: 'comments',
+    populate: {
+      path: '_owner',
+    }
+  });
+
+  res.status(200).json(populatedPost.comments);
 });
 
 module.exports = {
