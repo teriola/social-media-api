@@ -154,6 +154,7 @@ const removeLikePost = asyncHandler(async (req, res) => {
 // POST /posts/:id/comment
 // Private
 const commentPost = asyncHandler(async (req, res) => {
+  console.log(req.body);
   const post = await Post.findById(req.params.id);
   if (!post) {
     res.status(404);
