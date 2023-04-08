@@ -47,9 +47,9 @@ const userSchema = new Schema({
     type: ObjectId,
     ref: 'Post',
   }],
-  friends: [{
+  followers: [{
     type: ObjectId,
-    ref: 'Post',
+    ref: 'User',
   }],
   bookmarks: [{
     type: ObjectId,

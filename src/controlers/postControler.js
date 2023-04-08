@@ -30,6 +30,7 @@ const getUserBookmarks = asyncHandler(async (req, res) => {
       select: 'name surname profilePicture'
     }
   });
+  console.log(user.bookmarks);
   res.status(200).json(user.bookmarks);
 });
 
@@ -41,6 +42,7 @@ const setUserBookmark = asyncHandler(async (req, res) => {
   const user = await User.findById(req.user._id);
   user.bookmarks.push(postId);
   user.save();
+  console.log(user);
   res.status(204).json({
     message: "Bookmarked successfully",
   });

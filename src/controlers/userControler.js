@@ -26,7 +26,6 @@ const registerUser = asyncHandler(async (req, res) => {
     throw new Error('User already exists');
   }
   const hashedPassword = await bcrypt.hash(password, 10);
-
   // Payload
   const user = await User.create({
     name,
@@ -34,7 +33,6 @@ const registerUser = asyncHandler(async (req, res) => {
     email,
     password: hashedPassword,
   });
-
   if (user) {
     res.status(201).json({
       _id: user.id,
@@ -42,6 +40,7 @@ const registerUser = asyncHandler(async (req, res) => {
       email: user.email,
       profilePicture: user.profilePicture,
       accessToken: await signToken(user._id),
+      bookmarks: user.bookmarks,
     });
   } else {
     res.status(400);
@@ -57,6 +56,7 @@ const loginUser = asyncHandler(async (req, res) => {
   const user = await User.findOne({ email }).populate('bookmarks');
 
   if (user && (await bcrypt.compare(password, user.password))) {
+    console.log(user.bookmarks);
     // Payload
     res.json({
       _id: user.id,
@@ -84,7 +84,7 @@ const logoutUser = asyncHandler(async (req, res) => {
 // GET /users/:id
 // Public
 const getUserById = asyncHandler(async (req, res) => {
-  const { _id, name, surname, profilePicture, coverPicture, description } = await User.findById(req.params.id);
+  const { _id, name, surname, profilePicture, coverPicture, description, followers } = await User.findById(req.params.id).populate('followers');
 
   res.status(200).json({
     _id,
@@ -93,16 +93,29 @@ const getUserById = asyncHandler(async (req, res) => {
     profilePicture,
     coverPicture,
     description,
+    followers,
   });
 });
 
-// Get friends
-// GET /users/:id/friends
+// Get followers
+// GET /users/:id/followers
 // Public
-const getUserFriends = asyncHandler(async (req, res) => {
-  const user = await User.findById(req.params.id).populate('friends');
+const getUserFollowers = asyncHandler(async (req, res) => {
+  const user = await User.findById(req.params.id).populate('followers', ['_id', 'name', 'surname', 'profilePicture']);
+  console.log(user.followers);
 
-  res.status(200).json(user.friends);
+  res.status(200).json(user.followers);
+});
+
+// Post followers
+// POST /users/:userId/follow
+// Private
+const followUser = asyncHandler(async (req, res) => {
+    const user = await User.findById(req.params.userId);
+    user.followers.push(req.user._id);
+    user.save();
+
+    res.status(201).json({ message: 'Followed user'});
 });
 
 // Get user
@@ -141,6 +154,7 @@ module.exports = {
   patchUser,
 
   getUserById,
-  getUserFriends,
+  getUserFollowers,
+  followUser,
   getMe,
 };
