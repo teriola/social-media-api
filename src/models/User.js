@@ -39,6 +39,7 @@ const userSchema = new Schema({
     },
     description: {
         type: String,
+        default: '',
         maxLength: [100, 'Description is too long'],
     },
     theme: {
