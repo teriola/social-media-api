@@ -1,4 +1,4 @@
-const config = require("../config");
+const { NODE_ENV } = require("../config/constants");
 
 const errorHandler = (err, req, res, next) => {
   console.log(err.status);
@@ -7,7 +7,7 @@ const errorHandler = (err, req, res, next) => {
 
   res.json({
     message: err.message,
-    stack: config.NODE_ENV === 'production' ? null : err.stack,
+    stack: NODE_ENV === 'production' ? null : err.stack,
   });
 };
 

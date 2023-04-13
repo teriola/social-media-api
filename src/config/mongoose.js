@@ -1,5 +1,5 @@
 const mongoose = require('mongoose');
-const config = require('.');
+const config = require('./constants');
 
 async function setupMongoose() {
   mongoose.set('strictQuery', false);

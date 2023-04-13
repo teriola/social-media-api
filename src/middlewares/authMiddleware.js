@@ -1,27 +1,90 @@
-const asyncHandler = require("express-async-handler");
-const User = require("../models/User");
-const { decodeToken } = require("../utils/jwt");
+const { TOKEN_NAME, SECRET } = require("../config/constants");
+const jwt = require("../utils/jwt");
 
-const protect = asyncHandler(async (req, res, next) => {
-  const authorization = req.headers.authorization;
+exports.auth = async function (req, res, next) {
+    const token = req.headers[TOKEN_NAME];
 
-  if (authorization) {
-    try {
-      // Verify token
-      const decoded = await decodeToken(authorization);
-
-      // Get user and set it
-      req.user = await User.findById(decoded._id).select('-password');
-
-      next();
-    } catch (err) {
-      console.log(err);
-      res.status(401);
-      throw new Error('Not authorized')
+    if (token) {
+        //Veryfy token
+        jwt.verify(token, SECRET)
+            .then(decodedToken => {
+                req.user = decodedToken;
+                next();
+            })
+            .catch(err => {
+                res.status(401).json({ message: 'Unauthorized' });
+            });
+    } else {
+        next();
     }
-  } else{
-    res.status(401);
-    throw new Error('Not authorized, no token')
-  }
-});
-module.exports = protect;
+}
+
+exports.isAuth = function (req, res, next) {
+    if (req.user) {
+        next();
+    } else {
+        res.status(401).json({ message: 'Unauthorized' });
+    }
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+// exports.isGuest = function (req, res, next) {
+//     if (!req.user) {
+//         next();
+//     } else {
+//         res.status(401).json({ message: 'Unauthorized' });
+//     }
+// }
+
+// exports.isOwner = async function (req, res, next) {
+//     const book = await getReviewById(req.params.id);
+//
+//     if (book.owner == req.user._id) {
+//         next();
+//     } else {
+//         res.redirect('/');
+//     }
+// }
+
+// exports.isNotOwner = async function (req, res, next) {
+//     const book = await getReviewById(req.params.id);
+//
+//     if (book.owner != req.user._id) {
+//         next();
+//     } else {
+//         res.redirect('/');
+//     }
+// }
