@@ -60,8 +60,10 @@ router.post('/register',
 // Logout user
 // GET /auth/logout
 // Private
-router.get('/logout', isAuth, (req, res) => {
-    res.status(205).json({});
-});
+router.get('/logout',
+    isAuth,
+    (req, res) => {
+        res.status(205).json({});
+    });
 
 module.exports = router;

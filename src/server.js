@@ -5,7 +5,6 @@ const { PORT } = require('./config/constants');
 const routes = require('./routes');
 const errorHandler = require('./middlewares/errorHandler');
 
-
 // Initialize express app
 const app = express();
 require('./config/express')(app);
