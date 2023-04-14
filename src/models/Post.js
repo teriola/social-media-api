@@ -1,20 +1,16 @@
 const { Schema, model, Types: { ObjectId } } = require('mongoose');
 
 const postSchema = new Schema({
-    text: {
+    message: {
         type: String,
-        required: [true, 'Text is required'],
+        required: [true, 'Message is required'],
     },
     image: {
         type: String,
         required: [true, 'Image is required'],
         match: [/^https?:\/\/.*$/, 'Invalid image format'],
     },
-    likes: {
-        type: Number,
-        default: 0,
-    },
-    likedUsers: [{
+    likes: [{
         type: ObjectId,
         ref: 'User'
     }],
