@@ -24,8 +24,6 @@ const userSchema = new Schema({
     password: {
         type: String,
         required: [true, 'Password is required'],
-        minLength: [6, 'Password is too short'],
-        maxLength: [18, 'Password is too long'],
     },
     profilePicture: {
         type: String,
