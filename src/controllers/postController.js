@@ -1,16 +1,49 @@
-const asyncHandler = require("express-async-handler");
-const Post = require("../models/Post");
-const User = require("../models/User");
-const Comment = require("../models/Comment");
+const { isAuth } = require('../middlewares/authMiddleware');
+const { getAllPosts } = require('../services/postService');
+const { validatePost } = require('../utils/validations');
+
+const router = require('express').Router();
 
 // Get posts
 // GET /posts
 // Public
-const getPosts = asyncHandler(async (req, res) => {
-  const posts = await Post.find().populate('_owner', ['_id', 'name', 'surname', 'profilePicture']);
-  res.status(200).json(posts);
+router.get('/', async (req, res) => {
+    const posts = await getAllPosts();
+
+    console.log(posts);
+
+    res.status(200).json(posts);
 });
 
+// Create post
+// POST /posts
+// Private
+router.post('/', 
+    isAuth,
+    validatePost(),
+    async (req, res) => {
+        const { text, picture } = req.body;
+        if (!text || !picture) {
+            res.status(400);
+            throw new Error('All fields are required');
+        }
+        const post = await Post.create({
+            text,
+            picture,
+            _owner: req.user._id,
+        })
+        const user = await User.findById(req.user._id);
+        user.posts.push(post);
+
+        const populatedPost = await post.populate('_owner', ['profilePicture', 'name', 'surname']);
+
+        res.status(200).json(populatedPost);
+    });
+
+module.exports = router;
+
+
+/*
 // Get posts for user
 // GET /posts/user/:userId
 // Public
