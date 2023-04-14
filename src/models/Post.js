@@ -5,10 +5,10 @@ const postSchema = new Schema({
         type: String,
         required: [true, 'Text is required'],
     },
-    picture: {
+    image: {
         type: String,
-        required: [true, 'Picture is required'],
-        match: [/^https?:\/\//, 'Invalid picture format'],
+        required: [true, 'Image is required'],
+        match: [/^https?:\/\/.*$/, 'Invalid image format'],
     },
     likes: {
         type: Number,
