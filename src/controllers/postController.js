@@ -103,27 +103,6 @@ const getPost = asyncHandler(async (req, res) => {
   res.status(200).json(post);
 });
 
-// Set post
-// POST /posts
-// Private
-const setPost = asyncHandler(async (req, res) => {
-  const { text, picture } = req.body;
-  if (!text || !picture) {
-    res.status(400);
-    throw new Error('All fields are required');
-  }
-  const post = await Post.create({
-    text,
-    picture,
-    _owner: req.user._id,
-  })
-  const user = await User.findById(req.user._id);
-  user.posts.push(post);
-
-  const populatedPost = await post.populate('_owner', ['profilePicture', 'name', 'surname']);
-
-  res.status(200).json(populatedPost);
-});
 
 // Update post
 // PUT /posts/:id
@@ -223,21 +202,4 @@ const getPostComments = asyncHandler(async (req, res) => {
   res.status(200).json(populatedPost.comments);
 });
 
-module.exports = {
-  getPosts,
-  getPost,
-  getUserPosts,
-  getUserBookmarks,
-
-  setPost,
-  setUserBookmark,
-  removeUserBookmark,
-
-  commentPost,
-  getPostComments,
-
-  likePost,
-  removeLikePost,
-  updatePost,
-  deletePost,
-};
+*/
