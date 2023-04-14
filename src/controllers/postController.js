@@ -1,6 +1,8 @@
+const { validationResult } = require('express-validator');
 const { isAuth } = require('../middlewares/authMiddleware');
-const { getAllPosts } = require('../services/postService');
+const { getAllPosts, createPost } = require('../services/postService');
 const { validatePost } = require('../utils/validations');
+const { parseError } = require('../utils/parser');
 
 const router = require('express').Router();
 
@@ -9,9 +11,6 @@ const router = require('express').Router();
 // Public
 router.get('/', async (req, res) => {
     const posts = await getAllPosts();
-
-    console.log(posts);
-
     res.status(200).json(posts);
 });
 
