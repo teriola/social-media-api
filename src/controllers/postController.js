@@ -21,22 +21,19 @@ router.post('/',
     isAuth,
     validatePost(),
     async (req, res) => {
-        const { text, picture } = req.body;
-        if (!text || !picture) {
-            res.status(400);
-            throw new Error('All fields are required');
+        try {
+            const { errors } = validationResult(req);
+            if (errors.length > 0) throw errors;
+
+            // Create post
+            const post = await createPost(req.body, req.user._id);
+
+            res.status(200).json(post);
+        } catch (err) {
+            res.status(400).json({ 
+                errors: parseError(err) 
+            });
         }
-        const post = await Post.create({
-            text,
-            picture,
-            _owner: req.user._id,
-        })
-        const user = await User.findById(req.user._id);
-        user.posts.push(post);
-
-        const populatedPost = await post.populate('_owner', ['profilePicture', 'name', 'surname']);
-
-        res.status(200).json(populatedPost);
     });
 
 module.exports = router;
