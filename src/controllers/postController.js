@@ -1,6 +1,6 @@
 const { validationResult } = require('express-validator');
 const { isAuth } = require('../middlewares/authMiddleware');
-const { getAllPosts, createPost, getUserPosts, getUserBookmarks } = require('../services/postService');
+const { getAllPosts, createPost, getUserPosts, getUserBookmarks, setUserBookmark } = require('../services/postService');
 const { validatePost } = require('../utils/validations');
 const { parseError } = require('../utils/parser');
 
@@ -58,16 +58,19 @@ router.get('/bookmarks',
 // Set bookmark for user
 // POST /posts/bookmarks
 // Private
-// const setUserBookmark = asyncHandler(async (req, res) => {
-//   const { postId } = req.body;
-//   const user = await User.findById(req.user._id);
-//   user.bookmarks.push(postId);
-//   user.save();
-//   console.log(user);
-//   res.status(204).json({
-//     message: "Bookmarked successfully",
-//   });
-// });
+router.post('/:id/bookmark', 
+    isAuth,
+    async (req, res) => {
+        try {
+            await setUserBookmark(req.user._id, req.params.id);
+
+            res.status(204).json({ message: 'Bookmarked' });
+        } catch (err) {
+            res.status(400).json({ 
+                errors: parseError(err) 
+            });
+        }
+    });
 
 module.exports = router;
 
