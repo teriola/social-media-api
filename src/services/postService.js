@@ -28,3 +28,21 @@ exports.createPost = async (postData, owner) => {
         },
     };
 }
+
+exports.getUserPosts = async (id) => {
+    const posts = await Post.find({ owner: id }).populate('owner', '_id name surname profilePicture');
+    return posts.map(post => ({
+        _id: post._id,
+        message: post.message,
+        image: post.image,
+        createdAt: post.createdAt,
+        updatedAt: post.updatedAt,
+        owner: {
+            _id: post.owner._id,
+            name: post.owner.name,
+            surname: post.owner.surname,
+            profilePicture: post.owner.profilePicture,
+        },
+    }));
+};
+

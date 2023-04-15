@@ -1,6 +1,6 @@
 const { validationResult } = require('express-validator');
 const { isAuth } = require('../middlewares/authMiddleware');
-const { getAllPosts, createPost } = require('../services/postService');
+const { getAllPosts, createPost, getUserPosts } = require('../services/postService');
 const { validatePost } = require('../utils/validations');
 const { parseError } = require('../utils/parser');
 
@@ -36,18 +36,19 @@ router.post('/',
         }
     });
 
+// Get posts for user
+// GET /posts/user/:id
+// Public
+router.get('/user/:id', async (req, res) => {
+    const posts = await getUserPosts(req.params.id);
+
+    res.status(200).json(posts);
+});
+
 module.exports = router;
 
 
 /*
-// Get posts for user
-// GET /posts/user/:userId
-// Public
-const getUserPosts = asyncHandler(async (req, res) => {
-  const posts = await Post.find({ _owner: req.params.userId }).populate('_owner', ['_id', 'name', 'surname', 'profilePicture']);
-  res.status(200).json(posts);
-});
-
 // Get bookmarks for user
 // GET /posts/bookmarks
 // Private
