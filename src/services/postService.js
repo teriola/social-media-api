@@ -1,4 +1,5 @@
 const Post = require("../models/Post");
+const User = require("../models/User");
 const { parsePost } = require("../utils/parser");
 const { getUser } = require("./userService");
 
@@ -26,3 +27,14 @@ exports.getUserPosts = async (id) => {
     return posts.map(post => formatPost(post, post.owner));
 };
 
+exports.getUserBookmarks = async (id) => {
+    const populatedUser = await User.findById(id).populate({
+        path: 'bookmarks',
+        populate: {
+            path: 'owner',
+            select: 'name surname profilePicture'
+        }
+    });
+    console.log(populatedUser);
+    return populatedUser.bookmarks;
+}

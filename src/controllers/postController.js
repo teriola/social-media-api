@@ -1,6 +1,6 @@
 const { validationResult } = require('express-validator');
 const { isAuth } = require('../middlewares/authMiddleware');
-const { getAllPosts, createPost, getUserPosts } = require('../services/postService');
+const { getAllPosts, createPost, getUserPosts, getUserBookmarks } = require('../services/postService');
 const { validatePost } = require('../utils/validations');
 const { parseError } = require('../utils/parser');
 
@@ -41,43 +41,38 @@ router.post('/',
 // Public
 router.get('/user/:id', async (req, res) => {
     const posts = await getUserPosts(req.params.id);
-
     res.status(200).json(posts);
 });
+
+// Get bookmarks for user
+// GET /posts/bookmarks
+// Private
+router.get('/bookmarks', 
+    isAuth,
+    async (req, res) => {
+        const bookmarks = await getUserBookmarks(req.user._id);
+
+        res.status(200).json(bookmarks);
+    });
+
+// Set bookmark for user
+// POST /posts/bookmarks
+// Private
+// const setUserBookmark = asyncHandler(async (req, res) => {
+//   const { postId } = req.body;
+//   const user = await User.findById(req.user._id);
+//   user.bookmarks.push(postId);
+//   user.save();
+//   console.log(user);
+//   res.status(204).json({
+//     message: "Bookmarked successfully",
+//   });
+// });
 
 module.exports = router;
 
 
 /*
-// Get bookmarks for user
-// GET /posts/bookmarks
-// Private
-const getUserBookmarks = asyncHandler(async (req, res) => {
-  const user = await User.findById(req.user._id).populate({
-    path: 'bookmarks',
-    populate: {
-      path: '_owner',
-      select: 'name surname profilePicture'
-    }
-  });
-  console.log(user.bookmarks);
-  res.status(200).json(user.bookmarks);
-});
-
-// Set bookmark for user
-// POST /posts/bookmarks
-// Private
-const setUserBookmark = asyncHandler(async (req, res) => {
-  const { postId } = req.body;
-  const user = await User.findById(req.user._id);
-  user.bookmarks.push(postId);
-  user.save();
-  console.log(user);
-  res.status(204).json({
-    message: "Bookmarked successfully",
-  });
-});
-
 // Remove bookmark for user
 // DELETE /posts/bookmarks
 // Private
@@ -198,5 +193,4 @@ const getPostComments = asyncHandler(async (req, res) => {
 
   res.status(200).json(populatedPost.comments);
 });
-
 */
