@@ -16,3 +16,20 @@ exports.parseError = (err) => {
     }
     return errors.messages;
 }
+
+// Function to format post objects
+exports.parsePost = (post, owner) => {
+    return {
+        _id: post._id,
+        message: post.message,
+        image: post.image,
+        createdAt: post.createdAt,
+        updatedAt: post.updatedAt,
+        owner: {
+            _id: owner._id,
+            name: owner.name,
+            surname: owner.surname,
+            profilePicture: owner.profilePicture,
+        },
+    };
+}

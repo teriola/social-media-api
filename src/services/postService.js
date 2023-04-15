@@ -1,4 +1,5 @@
 const Post = require("../models/Post");
+const { parsePost } = require("../utils/parser");
 const { getUser } = require("./userService");
 
 exports.getAllPosts = () => Post.find().select('-likes -comments -__v').populate('owner', 'name surname profilePicture');
@@ -14,35 +15,14 @@ exports.createPost = async (postData, owner) => {
     user.posts.push(post._id);
 
     // Return post and owner
-    return {
-        _id: post._id,
-        message: post.message,
-        image: post.image,
-        createdAt: post.createdAt,
-        updatedAt: post.updatedAt,
-        owner: {
-            _id: user._id,
-            name: user.name,
-            surname: user.surname,
-            profilePicture: user.profilePicture,
-        },
-    };
+    return parsePost(post, user);
 }
 
 exports.getUserPosts = async (id) => {
+    // Get user posts
     const posts = await Post.find({ owner: id }).populate('owner', '_id name surname profilePicture');
-    return posts.map(post => ({
-        _id: post._id,
-        message: post.message,
-        image: post.image,
-        createdAt: post.createdAt,
-        updatedAt: post.updatedAt,
-        owner: {
-            _id: post.owner._id,
-            name: post.owner.name,
-            surname: post.owner.surname,
-            profilePicture: post.owner.profilePicture,
-        },
-    }));
+
+    // Return in right format
+    return posts.map(post => formatPost(post, post.owner));
 };
 
