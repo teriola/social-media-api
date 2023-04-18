@@ -1,6 +1,6 @@
 const { validationResult } = require('express-validator');
 const { isAuth } = require('../middlewares/authMiddleware');
-const { getAllPosts, createPost, getUserPosts, getUserBookmarks, setUserBookmark, removeUserBookmark, removePost, likePost, unlikePost, commentPost } = require('../services/postService');
+const { getAllPosts, createPost, getUserPosts, getUserBookmarks, setUserBookmark, removeUserBookmark, removePost, likePost, unlikePost, commentPost, getPostComments } = require('../services/postService');
 const { validatePost } = require('../utils/validations');
 const { parseError } = require('../utils/parser');
 
@@ -158,30 +158,25 @@ router.post('/:id/comment',
     }
   });
 
+// Get comments
+// GET /posts/:id/comments
+// Public
+router.get('/:id/comments', async (req, res) => {
+  try {
+    const comments = await getPostComments(req.params.id);
+
+    res.status(200).json(comments);
+  } catch (err) {
+    res.status(400).json({
+      errors: parseError(err),
+    });
+  }
+});
 
 module.exports = router;
 
 
 /*
-// Get comments
-// GET /posts/:id/comments
-// Public
-const getPostComments = asyncHandler(async (req, res) => {
-  const post = await Post.findById(req.params.id);
-  if (!post) {
-    res.status(404);
-    throw new Error('Post does not exist');
-  }
-  const populatedPost = await post.populate({
-    path: 'comments',
-    populate: {
-      path: '_owner',
-    }
-  });
-
-  res.status(200).json(populatedPost.comments);
-});
-
 // Update post
 // PUT /posts/:id
 // Private

@@ -141,3 +141,21 @@ exports.commentPost = async (postId, owner, text) => {
 
   return post;
 }
+
+exports.getPostComments = async (postId) => {
+  const post = await Post.findById(postId);
+
+  if (!post) throw new Error('Post not found');
+
+  // Populate comments and their owner
+  const populatedPost = await post.populate({
+    path: 'comments',
+    select: '-__v',
+    populate: {
+      path: 'owner',
+      select: '_id name surname profilePicture',
+    },
+  });
+
+  return populatedPost.comments;
+}
