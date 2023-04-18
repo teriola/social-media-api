@@ -1,6 +1,6 @@
 const { validationResult } = require('express-validator');
 const { isAuth } = require('../middlewares/authMiddleware');
-const { getAllPosts, createPost, getUserPosts, getUserBookmarks, setUserBookmark } = require('../services/postService');
+const { getAllPosts, createPost, getUserPosts, getUserBookmarks, setUserBookmark, removeUserBookmark } = require('../services/postService');
 const { validatePost } = require('../utils/validations');
 const { parseError } = require('../utils/parser');
 
@@ -10,109 +10,89 @@ const router = require('express').Router();
 // GET /posts
 // Public
 router.get('/', async (req, res) => {
-    const posts = await getAllPosts();
-    res.status(200).json(posts);
+  const posts = await getAllPosts();
+  res.status(200).json(posts);
 });
 
 // Create post
 // POST /posts
 // Private
-router.post('/', 
-    isAuth,
-    validatePost(),
-    async (req, res) => {
-        try {
-            const { errors } = validationResult(req);
-            if (errors.length > 0) throw errors;
+router.post('/',
+  isAuth,
+  validatePost(),
+  async (req, res) => {
+    try {
+      const { errors } = validationResult(req);
+      if (errors.length > 0) throw errors;
 
-            // Create post
-            const post = await createPost(req.body, req.user._id);
+      // Create post
+      const post = await createPost(req.body, req.user._id);
 
-            res.status(200).json(post);
-        } catch (err) {
-            res.status(400).json({ 
-                errors: parseError(err) 
-            });
-        }
-    });
+      res.status(200).json(post);
+    } catch (err) {
+      res.status(400).json({
+        errors: parseError(err)
+      });
+    }
+  });
 
 // Get posts for user
 // GET /posts/user/:id
 // Public
 router.get('/user/:id', async (req, res) => {
-    const posts = await getUserPosts(req.params.id);
-    res.status(200).json(posts);
+  const posts = await getUserPosts(req.params.id);
+  res.status(200).json(posts);
 });
 
 // Get bookmarks for user
 // GET /posts/bookmarks
 // Private
-router.get('/bookmarks', 
-    isAuth,
-    async (req, res) => {
-        const bookmarks = await getUserBookmarks(req.user._id);
+router.get('/bookmarks',
+  isAuth,
+  async (req, res) => {
+    const bookmarks = await getUserBookmarks(req.user._id);
 
-        res.status(200).json(bookmarks);
-    });
+    res.status(200).json(bookmarks);
+  });
 
 // Set bookmark for user
-// POST /posts/bookmarks
+// POST /posts/:id/bookmark
 // Private
-router.post('/:id/bookmark', 
-    isAuth,
-    async (req, res) => {
-        try {
-            await setUserBookmark(req.user._id, req.params.id);
+router.post('/:id/bookmark',
+  isAuth,
+  async (req, res) => {
+    try {
+      await setUserBookmark(req.user._id, req.params.id);
 
-            res.status(204).json({ message: 'Bookmarked' });
-        } catch (err) {
-            res.status(400).json({ 
-                errors: parseError(err) 
-            });
-        }
-    });
+      res.status(204).json({});
+    } catch (err) {
+      res.status(400).json({
+        errors: parseError(err),
+      });
+    }
+  });
+
+// Remove bookmark for user
+// DELETE /posts/:id/bookmark
+// Private
+router.delete('/:id/bookmark',
+  isAuth,
+  async (req, res) => {
+    try {
+      await removeUserBookmark(req.user._id, req.params.id);
+
+      res.status(204).json({});
+    } catch (err) {
+      res.status(404).json({
+        errors: parseError(err),
+      });
+    }
+  });
 
 module.exports = router;
 
 
 /*
-// Remove bookmark for user
-// DELETE /posts/bookmarks
-// Private
-const removeUserBookmark = asyncHandler(async (req, res) => {
-  const { postId } = req.body;
-  const user = await User.findById(req.user._id);
-  user.bookmarks.splice(user.bookmarks.indexOf(postId), 1);
-  user.save();
-  res.status(204).json({
-    message: "Bookmark successfully removed",
-  });
-});
-
-// Get post
-// GET /posts/:id
-// Public
-const getPost = asyncHandler(async (req, res) => {
-  const post = await Post.findById(req.params.id);
-
-  res.status(200).json(post);
-});
-
-
-// Update post
-// PUT /posts/:id
-// Private
-const updatePost = asyncHandler(async (req, res) => {
-  const post = await Post.findById(req.params.id);
-  if (!post) {
-    res.status(400);
-    throw new Error('Post not found');
-  }
-
-  const updatedPost = await Post.findOneAndUpdate(req.params.id, req.body, { new: true }).populate('_owner', ['profilePicture', 'name', 'surname']);
-  res.status(200).json(updatedPost);
-});
-
 // Delete post
 // DELETE /posts/:id
 // Private
@@ -195,5 +175,19 @@ const getPostComments = asyncHandler(async (req, res) => {
   });
 
   res.status(200).json(populatedPost.comments);
+});
+
+// Update post
+// PUT /posts/:id
+// Private
+const updatePost = asyncHandler(async (req, res) => {
+  const post = await Post.findById(req.params.id);
+  if (!post) {
+    res.status(400);
+    throw new Error('Post not found');
+  }
+
+  const updatedPost = await Post.findOneAndUpdate(req.params.id, req.body, { new: true }).populate('_owner', ['profilePicture', 'name', 'surname']);
+  res.status(200).json(updatedPost);
 });
 */

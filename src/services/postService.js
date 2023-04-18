@@ -63,3 +63,24 @@ exports.setUserBookmark = async (id, postId) => {
 
     return user.bookmarks;
 }
+
+exports.removeUserBookmark = async (id, postId) => {
+    // Get user
+    const user = await getUser(id);
+
+    // Check if postId is valid
+    if (!mongoose.isValidObjectId(postId)) throw new Error('Post not found');
+
+    // Get post
+    const post = await Post.findById(postId);
+
+    // Check if post exists
+    if (!post) throw new Error('Post not found');
+
+    // Check if user has not bookmarked
+    const isBookmarked = user.bookmarks.some(bookmark => bookmark == postId);
+    if (!isBookmarked) throw new Error('Post not bookmarked');
+
+    user.bookmarks.splice(user.bookmarks.indexOf(postId), 1);
+    user.save();
+}
