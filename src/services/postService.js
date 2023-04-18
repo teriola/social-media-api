@@ -84,3 +84,16 @@ exports.removeUserBookmark = async (id, postId) => {
     user.bookmarks.splice(user.bookmarks.indexOf(postId), 1);
     user.save();
 }
+
+exports.removePost = async (_id, userId) => {
+    const post = await Post.findById(_id);
+    
+    // Checks if post exists
+    if (!post) throw new Error('Post not found');
+
+    // Check if user is owner of post
+    if (post.owner != userId) throw new Error('Not authorized');
+
+    // Delete post
+    await Post.deleteOne({ _id });
+}

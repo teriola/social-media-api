@@ -1,12 +1,12 @@
 const { validationResult } = require('express-validator');
 const { isAuth } = require('../middlewares/authMiddleware');
-const { getAllPosts, createPost, getUserPosts, getUserBookmarks, setUserBookmark, removeUserBookmark } = require('../services/postService');
+const { getAllPosts, createPost, getUserPosts, getUserBookmarks, setUserBookmark, removeUserBookmark, removePost } = require('../services/postService');
 const { validatePost } = require('../utils/validations');
 const { parseError } = require('../utils/parser');
 
 const router = require('express').Router();
 
-// Get posts
+// Get all posts
 // GET /posts
 // Public
 router.get('/', async (req, res) => {
@@ -89,29 +89,28 @@ router.delete('/:id/bookmark',
     }
   });
 
+// Delete post
+// DELETE /posts/:id
+// Private
+router.delete('/:id',
+  isAuth,
+  async (req, res) => {
+    try {
+      await removePost(req.params.id, req.user._id);
+
+      res.status(204).json({});
+    } catch (err) {
+      res.status(400).json({
+        errors: parseError(err),
+      });
+    }
+  });
+
 module.exports = router;
 
 
 /*
-// Delete post
-// DELETE /posts/:id
-// Private
-const deletePost = asyncHandler(async (req, res) => {
-  const id = req.params.id;
-  const post = await Post.findById(id);
 
-  if (post._owner.toString() != req.user._id.toString()) {
-    res.status(401);
-    throw new Error('Not authorized')
-  }
-  if (!post) {
-    res.status(400);
-    throw new Error('Post not found');
-  }
-  await Post.deleteOne({ _id: id });
-
-  res.status(200).json({ id });
-});
 
 // Like post
 // POST /posts/:id/like
