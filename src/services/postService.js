@@ -1,4 +1,5 @@
 const mongoose = require('mongoose');
+const Comment = require('../models/Comment');
 const Post = require("../models/Post");
 const { parsePost } = require("../utils/parser");
 const { getUser } = require("./userService");
@@ -123,6 +124,19 @@ exports.unlikePost = async (postId, userId) => {
   if (!post.likes.includes(userId)) throw new Error('User has not liked');
 
   post.likes.splice(post.likes.indexOf(userId), 1);
+  post.save();
+
+  return post;
+}
+
+exports.commentPost = async (postId, owner, text) => {
+  const post = await Post.findById(postId);
+
+  if (!post) throw new Error('Post not found');
+
+  // Create comment and add it to post comments
+  const comment = await Comment.create({ text, owner });
+  post.comments.push(comment._id);
   post.save();
 
   return post;

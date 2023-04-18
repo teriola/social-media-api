@@ -1,6 +1,6 @@
 const { validationResult } = require('express-validator');
 const { isAuth } = require('../middlewares/authMiddleware');
-const { getAllPosts, createPost, getUserPosts, getUserBookmarks, setUserBookmark, removeUserBookmark, removePost, likePost, unlikePost } = require('../services/postService');
+const { getAllPosts, createPost, getUserPosts, getUserBookmarks, setUserBookmark, removeUserBookmark, removePost, likePost, unlikePost, commentPost } = require('../services/postService');
 const { validatePost } = require('../utils/validations');
 const { parseError } = require('../utils/parser');
 
@@ -140,32 +140,29 @@ router.delete('/:id/unlike',
     }
 
   });
-module.exports = router;
-
-
-/*
-// Remove like
-
 
 // Post comment
 // POST /posts/:id/comment
 // Private
-const commentPost = asyncHandler(async (req, res) => {
-  console.log(req.body);
-  const post = await Post.findById(req.params.id);
-  if (!post) {
-    res.status(404);
-    throw new Error('Post does not exist');
-  }
-  const comment = await Comment.create({
-    text: req.body.text,
-    _owner: req.user._id,
-  });
-  post.comments.push(comment._id);
-  post.save();
-  res.status(204).json({ message: 'Comment created' });
-});
+router.post('/:id/comment',
+  isAuth,
+  async (req, res) => {
+    try {
+      await commentPost(req.params.id, req.user._id, req.body.text);
 
+      res.status(204).json({});
+    } catch (err) {
+      res.status(400).json({
+        errors: parseError(err),
+      });
+    }
+  });
+
+
+module.exports = router;
+
+
+/*
 // Get comments
 // GET /posts/:id/comments
 // Public
