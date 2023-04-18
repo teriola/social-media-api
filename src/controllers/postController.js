@@ -1,6 +1,6 @@
 const { validationResult } = require('express-validator');
 const { isAuth } = require('../middlewares/authMiddleware');
-const { getAllPosts, createPost, getUserPosts, getUserBookmarks, setUserBookmark, removeUserBookmark, removePost } = require('../services/postService');
+const { getAllPosts, createPost, getUserPosts, getUserBookmarks, setUserBookmark, removeUserBookmark, removePost, likePost } = require('../services/postService');
 const { validatePost } = require('../utils/validations');
 const { parseError } = require('../utils/parser');
 
@@ -106,25 +106,27 @@ router.delete('/:id',
     }
   });
 
+// Like post
+// POST /posts/:id/like
+// Private
+router.post('/:id/like',
+  isAuth,
+  async (req, res) => {
+    try {
+      const post = await likePost(req.params.id, req.user._id);
+
+      res.status(200).json(post);
+    } catch (err) {
+      res.status(400).json({
+        errors: parseError(err),
+      });
+    }
+  });
+
 module.exports = router;
 
 
 /*
-
-
-// Like post
-// POST /posts/:id/like
-// Private
-const likePost = asyncHandler(async (req, res) => {
-  const post = await Post.findById(req.params.id);
-  if (post.likedUsers.includes(req.user._id)) return;
-  post.likedUsers.push(req.user._id);
-  post.likes += 1;
-  post.save();
-
-  res.status(200).json(post);
-});
-
 // Remove like
 // POST /posts/:id/unlike
 // Private
