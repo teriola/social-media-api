@@ -101,10 +101,28 @@ exports.removePost = async (_id, userId) => {
 exports.likePost = async (postId, userId) => {
   const post = await Post.findById(postId);
 
+  // Check if post exists
+  if (!post) throw new Error('Post not found');
+
   // Check if user has already liked
   if (post.likes.includes(userId)) throw new Error('User has already liked');
 
   post.likes.push(userId);
+  post.save();
+
+  return post;
+}
+
+exports.unlikePost = async (postId, userId) => {
+  const post = await Post.findById(postId);
+
+  // Check if post exists
+  if (!post) throw new Error('Post not found');
+
+  // Check if user has liked
+  if (!post.likes.includes(userId)) throw new Error('User has not liked');
+
+  post.likes.splice(post.likes.indexOf(userId), 1);
   post.save();
 
   return post;
