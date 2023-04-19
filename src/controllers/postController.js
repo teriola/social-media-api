@@ -178,9 +178,10 @@ router.get('/:id/comments', async (req, res) => {
 // Private
 router.put('/:id/',
   isAuth,
+  validatePost(),
   async (req, res) => {
     try {
-      const post = await updatePost();
+      const post = await updatePost(req.params.id, req.body);
 
       res.status(200).json(post);
     } catch (err) {
