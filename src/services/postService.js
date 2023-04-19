@@ -159,3 +159,14 @@ exports.getPostComments = async (postId) => {
 
   return populatedPost.comments;
 }
+
+exports.updatePost = async (postId) => {
+  const post = await Post.findById(postId);
+
+  if (!post) throw new Error('Post not found');
+
+  // Update post and populate owner
+  const updatedPost = await Post.findOneAndUpdate(postId, data, { new: true }).populate('owner');
+
+  return parsePost(updatedPost);
+}

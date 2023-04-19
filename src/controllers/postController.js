@@ -1,6 +1,6 @@
 const { validationResult } = require('express-validator');
 const { isAuth } = require('../middlewares/authMiddleware');
-const { getAllPosts, createPost, getUserPosts, getUserBookmarks, setUserBookmark, removeUserBookmark, removePost, likePost, unlikePost, commentPost, getPostComments } = require('../services/postService');
+const { getAllPosts, createPost, getUserPosts, getUserBookmarks, setUserBookmark, removeUserBookmark, removePost, likePost, unlikePost, commentPost, getPostComments, updatePost } = require('../services/postService');
 const { validatePost } = require('../utils/validations');
 const { parseError } = require('../utils/parser');
 
@@ -173,21 +173,21 @@ router.get('/:id/comments', async (req, res) => {
   }
 });
 
-module.exports = router;
-
-
-/*
 // Update post
 // PUT /posts/:id
 // Private
-const updatePost = asyncHandler(async (req, res) => {
-  const post = await Post.findById(req.params.id);
-  if (!post) {
-    res.status(400);
-    throw new Error('Post not found');
-  }
+router.put('/:id/',
+  isAuth,
+  async (req, res) => {
+    try {
+      const post = await updatePost();
 
-  const updatedPost = await Post.findOneAndUpdate(req.params.id, req.body, { new: true }).populate('_owner', ['profilePicture', 'name', 'surname']);
-  res.status(200).json(updatedPost);
-});
-*/
+      res.status(200).json(post);
+    } catch (err) {
+      res.status(400).json({
+        errors: parseError(err),
+      });
+    }
+  });
+
+module.exports = router;
