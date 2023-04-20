@@ -5,7 +5,7 @@ const { parsePost } = require("../utils/parser");
 const { getUser } = require("./userService");
 
 
-exports.getAllPosts = () => Post.find().select('-likes -comments -__v').populate('owner', 'name surname profilePicture');
+exports.getAllPosts = () => Post.find().select('-__v').populate('owner', 'name surname profilePicture');
 
 exports.createPost = async (postData, owner) => {
   // Get user

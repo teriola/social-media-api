@@ -23,6 +23,8 @@ exports.parsePost = (post, owner) => {
         _id: post._id,
         message: post.message,
         image: post.image,
+        likes: post.likes,
+        comments: post.comments,
         createdAt: post.createdAt,
         updatedAt: post.updatedAt,
         owner: {
