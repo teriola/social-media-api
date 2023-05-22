@@ -22,6 +22,10 @@ exports.createPost = async ({ text, picture, ownerId }) => {
 exports.editPost = async (id, data) => {
     await Post.findByIdAndUpdate(id, data, { runValidators: true });
 };
+exports.getBookmarksByUser = async (id) => {
+    const user = await User.findById(id).populate('bookmarks');
+    return user.bookmarks;
+}
 
 // exports.likePost = async (postId, data) => {
 //     await Post.findByIdAndUpdate(postId, data);
