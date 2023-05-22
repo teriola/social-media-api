@@ -2,11 +2,11 @@ const Post = require('../models/Post');
 const User = require('../models/User');
 
 exports.getAllPosts = async () => {
-    const posts = await Post.find().populate('_owner', ['profilePicture', 'firstName', 'lastName']).lean();
+    const posts = await Post.find().populate('_owner', ['profilePicture', 'name', 'surname']).lean();
     return posts;
 };
 exports.getPostsByUser = async (userId) => {
-    const posts = await Post.find({ _owner: userId }).populate('_owner', ['profilePicture', 'firstName', 'lastName']);
+    const posts = await Post.find({ _owner: userId }).populate('_owner', ['profilePicture', 'name', 'surname']);
     return posts;
 };
 exports.getPostById = async (id) => {

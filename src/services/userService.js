@@ -17,8 +17,8 @@ exports.login = async ({ email, password }) => {
   return createPayload(user, token);
 };
 exports.register = async ({
-  firstName,
-  lastName,
+  name,
+  surname,
   email,
   password,
   repeatPassword,
@@ -31,8 +31,8 @@ exports.register = async ({
   }
   const hashedPassword = await bcrypt.hash(password, 10);
   const user = new User({
-    firstName,
-    lastName,
+    name,
+    surname,
     email,
     password: hashedPassword,
   });

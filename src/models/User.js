@@ -2,12 +2,12 @@ const { Schema, model, Types: { ObjectId } } = require('mongoose');
 
 const UserSchema = new Schema({
     // Required
-    firstName: {
+    name: {
         type: String,
         required: true,
         minLength: [2, 'Name should be at least 2 characters long'],
     },
-    lastName: {
+    surname: {
         type: String,
         required: true,
         minLength: [2, 'Surname should be at least 2 characters long'],

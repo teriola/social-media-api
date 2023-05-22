@@ -9,8 +9,8 @@ const jwt = {
   virify: util.promisify(jsonwebtoken.verify),
 };
 
-exports.signToken = async ({ _id, email, firstName, lastName }) => {
-  return jwt.sign({ _id, email, firstName, lastName }, config.SECRET, { expiresIn: '24h' });
+exports.signToken = async ({ _id, email, name, surname }) => {
+  return jwt.sign({ _id, email, name, surname }, config.SECRET, { expiresIn: '24h' });
 };
 
 exports.verifyToken = async (headers) => {
@@ -27,12 +27,12 @@ exports.verifyToken = async (headers) => {
 };
 
 exports.createPayload = (user, token) => {
-  const { _id, email, firstName, lastName, profilePicture, coverPicture, } = user;
+  const { _id, email, name, surname, profilePicture, coverPicture, } = user;
   return {
     _id,
     email,
-    firstName,
-    lastName,
+    name,
+    surname,
     profilePicture,
     coverPicture,
     accessToken: token,
