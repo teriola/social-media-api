@@ -124,7 +124,7 @@ router.post('/:id/like',
     });
 
 // Unlike post
-// POST /posts/:id/unlike
+// DELETE /posts/:id/unlike
 // Private
 router.delete('/:id/unlike',
     isAuth,

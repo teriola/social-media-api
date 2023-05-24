@@ -8,13 +8,13 @@ exports.register = async userData => {
 
     // Create user
     const user = await User.create(userData);
-    const token = await createToken(user);
+    const accessToken = await createToken(user);
     return {
         _id: user._id,
         name: user.name,
         surname: user.surname,
         profilePicture: user.profilePicture,
-        token,
+        accessToken,
     };
 }
 

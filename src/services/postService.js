@@ -116,7 +116,6 @@ exports.likePost = async (postId, userId) => {
 
 exports.unlikePost = async (postId, userId) => {
     const post = await Post.findById(postId);
-    console.log(post)
 
     // Check if post exists
     if (!post) throw new Error('Post not found');
