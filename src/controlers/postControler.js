@@ -7,7 +7,7 @@ router.post('/', handleResponse(postService.createPost));
 
 router.get('/user/:id', handleResponse(postService.getPostsByUser));
 router.get('/bookmark/:id', handleResponse(postService.getBookmarksByUser));
-router.post('/like/:id', handleResponse(postService.editPost));
+router.post('/:id/like', handleResponse(postService.likePost));
 
 router.get('/:id',
     validateUtility({ idValidator: true }, 'Post'),

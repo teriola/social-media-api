@@ -1,11 +1,11 @@
 const { Schema, model, Types: { ObjectId } } = require('mongoose');
 
 const PostSchema = new Schema({
-    text: {
+    message: {
         type: String,
         required: true,
     },
-    picture: {
+    image: {
         type: String,
         match: [/^https?:\/\//, 'Invalid profile picture format'],
     },
@@ -13,10 +13,14 @@ const PostSchema = new Schema({
         type: String,
         default: new Date().toISOString(),
     },
-    likes:{
-        type: Number,
-        default: 0,
-    },
+    likes: [{
+        type: ObjectId,
+        ref: 'User',
+    }],
+    comments: [{
+      type: ObjectId, 
+      ref: 'Comment',
+    }],
     _owner: { type: ObjectId, ref: 'User' }
 });
 

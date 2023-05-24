@@ -13,8 +13,8 @@ exports.getPostById = async (id) => {
     const post = await Post.findById(id);
     return post;
 };
-exports.createPost = async ({ text, picture, ownerId }) => {
-    const post = new Post({ text, picture, _owner: ownerId });
+exports.createPost = async ({ message, image, ownerId }) => {
+    const post = new Post({ message, image, _owner: ownerId });
     await post.save();
     console.log(post);
     return post;
@@ -27,9 +27,27 @@ exports.getBookmarksByUser = async (id) => {
     return user.bookmarks;
 }
 
-// exports.likePost = async (postId, data) => {
-//     await Post.findByIdAndUpdate(postId, data);
-// }
+exports.likePost = async (postId, loggedUser) => {
+  const post = await Post.findById(postId);
+  const user = await User.findById(loggedUser._id);
+  console.log(loggedUser);
+
+  // if (school.likes.users.includes(userId)) return school;
+  // school.likes.users.push(userId);
+  // school.likes.count += 1;
+  // user.likedSchools.push(schoolId);
+  // await user.save();
+  // await school.save();
+  // return school;
+  // Check if user has already liked
+  // if (post.likes.includes(userId)) throw new Error('User has already liked');
+
+  // post.likes.push(userId);
+  // post.save();
+  //
+  // return post;
+}
+
 // exports.deletePost = async (id) => {
 //     await Post.findByIdAndRemove(id);
 // };

@@ -9,7 +9,7 @@ exports.handleResponse = (cb, msg) => {
       if (req.params.id && req.body) {
         data = await cb(req.params.id, req.body);
       } else if (req.params.id && !req.body) {
-        data = await cb(req.params.id);
+        data = await cb(req.params.id, req.user);
       } else {
         data = await cb(req.body);
       }
