@@ -98,7 +98,7 @@ router.delete('/:id',
         try {
             await removePost(req.params.id, req.user._id);
 
-            res.status(204).json({});
+            res.status(200).json({ id: req.params.id });
         } catch (err) {
             res.status(400).json({
                 errors: parseError(err),
