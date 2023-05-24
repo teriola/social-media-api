@@ -40,3 +40,11 @@ exports.postUserFollower = async (id, followerId) => {
 
     return user.followers;
 };
+
+exports.editUser = async (id, body) => {
+    const user = await this.getUser(id);
+
+    const updatedUser = await User.findByIdAndUpdate(id, body);
+
+    return updatedUser;
+}

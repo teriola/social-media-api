@@ -1,7 +1,7 @@
 const router = require('express').Router();
 
 const { isAuth } = require('../middlewares/authMiddleware');
-const { getUser, getUserFollowers, postUserFollower } = require('../services/userService');
+const { getUser, getUserFollowers, postUserFollower, editUser } = require('../services/userService');
 const { parseError } = require('../utils/parser');
 
 // Get current user
@@ -96,18 +96,19 @@ router.post('/:id/follow',
 
 module.exports = router;
 
-/*
-// Patch user
-// PATCH /users/:userId
+// Edit user
+// PATCH /users/:id
 // Private
-const patchUser = asyncHandler(async (req, res) => {
-const user = await User.findById(req.params.userId);
-if (!user) {
-res.status(404);
-throw new Error('User not found');
-}
-const updatedUser = await User.findByIdAndUpdate(req.params.userId, req.body);
-
-res.status(200).json(updatedUser);
-});
-*/
+router.patch('/:id', 
+    isAuth,
+    async (req, res) => {
+        try {
+            const editedUser = await editUser(req.params.id, req.body);
+            console.log(editedUser);
+            res.status(200).json({
+                message: 'Edited user',
+            });
+        } catch (err) {
+            res.status(404).json({ message: err.message });
+        }
+    });
