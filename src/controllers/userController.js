@@ -49,6 +49,7 @@ router.get('/:id', async (req, res) => {
             profilePicture,
             coverPicture,
             posts,
+            followers,
         } = await getUser(req.params.id);
 
         res.status(200).json({
@@ -60,6 +61,7 @@ router.get('/:id', async (req, res) => {
             profilePicture,
             coverPicture,
             posts,
+            followers,
         });
     } catch (err) {
         res.status(404).json({ message: err.message });
