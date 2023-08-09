@@ -48,6 +48,7 @@ router.get('/:id', async (req, res) => {
             description,
             profilePicture,
             coverPicture,
+            posts,
         } = await getUser(req.params.id);
 
         res.status(200).json({
@@ -58,6 +59,7 @@ router.get('/:id', async (req, res) => {
             description,
             profilePicture,
             coverPicture,
+            posts,
         });
     } catch (err) {
         res.status(404).json({ message: err.message });
@@ -104,7 +106,6 @@ router.patch('/:id',
     async (req, res) => {
         try {
             const editedUser = await editUser(req.params.id, req.body);
-            console.log(editedUser);
             res.status(200).json({
                 message: 'Edited user',
             });

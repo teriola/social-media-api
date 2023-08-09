@@ -16,7 +16,7 @@ exports.createPost = async (postData, owner) => {
 
     // Add post to user posts
     user.posts.push(post._id);
-
+    user.save();
     // Return post and owner
     return parsePost(post, user);
 }
@@ -167,6 +167,5 @@ exports.updatePost = async (postId, data) => {
 
     // Update post and populate owner
     const updatedPost = await Post.findOneAndUpdate(postId, data, { new: true }).populate('owner');
-    console.log(updatedPost);
     return parsePost(updatedPost, updatedPost.owner);
 }
