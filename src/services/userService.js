@@ -28,6 +28,7 @@ exports.getUserFollowers = async (id) => {
 
 exports.postUserFollower = async (id, followerId) => {
     const user = await this.getUser(id);
+    const followerUser = await this.getUser(followerId);
 
     // Check if user has already followed
     if (user.followers.find(e => e == followerId)) throw new Error('User has already followed');
@@ -37,6 +38,8 @@ exports.postUserFollower = async (id, followerId) => {
     //Add follower
     user.followers.push(followerId);
     user.save();
+    followerUser.following.push(id);
+    followerUser.save();
 
     return user.followers;
 };

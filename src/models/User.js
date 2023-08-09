@@ -52,6 +52,10 @@ const userSchema = new Schema({
         type: ObjectId,
         ref: 'User',
     }],
+    following: [{
+        type: ObjectId,
+        ref: 'User',
+    }],
     bookmarks: [{
         type: ObjectId,
         ref: 'Post',
