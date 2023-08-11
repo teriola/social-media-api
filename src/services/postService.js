@@ -105,6 +105,11 @@ exports.likePost = async (postId, userId) => {
     // Check if post exists
     if (!post) throw new Error('Post not found');
 
+    const user = await getUser(userId);
+
+    // Check if user exists
+    if (!user) throw new Error('User not found');
+
     // Check if user has already liked
     if (post.likes.includes(userId)) throw new Error('User has already liked');
 
