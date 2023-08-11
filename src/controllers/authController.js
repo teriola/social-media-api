@@ -14,7 +14,6 @@ router.post('/login',
         try {
             const { errors } = validationResult(req);
             if (errors.length > 0) throw errors;
-
             // Login user
             const { _id, name, surname, profilePicture, accessToken } = await login({
                 email: req.body.email,
@@ -46,7 +45,6 @@ router.post('/register',
         try {
             const { errors } = validationResult(req);
             if (errors.length > 0) throw errors;
-
             // Register user
             const { _id, name, surname, profilePicture, accessToken } = await register({
                 name: req.body.name,
