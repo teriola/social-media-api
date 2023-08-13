@@ -14,8 +14,12 @@ const postSchema = new Schema({
         type: ObjectId,
         ref: 'User'
     }],
+    bookmarks: [{
+        type: ObjectId,
+        ref: 'User',
+    }],
     comments: [{
-        type: ObjectId, 
+        type: ObjectId,
         ref: 'Comment',
     }],
     owner: {
@@ -24,8 +28,8 @@ const postSchema = new Schema({
         ref: 'User'
     },
 }, {
-        timestamps: true,
-    });
+    timestamps: true,
+});
 
 const Post = model('Post', postSchema);
 

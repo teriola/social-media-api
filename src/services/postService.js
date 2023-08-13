@@ -61,6 +61,8 @@ exports.setUserBookmark = async (id, postId) => {
 
     user.bookmarks.push(postId);
     user.save();
+    post.bookmarks.push(user._id);
+    post.save();
 
     return user.bookmarks;
 }
