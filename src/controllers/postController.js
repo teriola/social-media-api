@@ -62,9 +62,9 @@ router.post('/:id/bookmark',
     isAuth,
     async (req, res) => {
         try {
-            await setUserBookmark(req.user._id, req.params.id);
+            const post = await setUserBookmark(req.user._id, req.params.id);
 
-            res.status(204).json({});
+            res.status(201).json(post);
         } catch (err) {
             res.status(400).json({
                 errors: parseError(err),
@@ -79,9 +79,9 @@ router.delete('/:id/bookmark',
     isAuth,
     async (req, res) => {
         try {
-            await removeUserBookmark(req.user._id, req.params.id);
+            const post = await removeUserBookmark(req.user._id, req.params.id);
 
-            res.status(204).json({});
+            res.status(200).json(post);
         } catch (err) {
             res.status(404).json({
                 errors: parseError(err),
