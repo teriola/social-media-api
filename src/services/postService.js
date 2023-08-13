@@ -64,7 +64,7 @@ exports.setUserBookmark = async (id, postId) => {
     post.bookmarks.push(user._id);
     post.save();
 
-    return user.bookmarks;
+    return post;
 }
 
 exports.removeUserBookmark = async (id, postId) => {
@@ -86,6 +86,10 @@ exports.removeUserBookmark = async (id, postId) => {
 
     user.bookmarks.splice(user.bookmarks.indexOf(postId), 1);
     user.save();
+    post.bookmarks.splice(post.bookmarks.indexOf(user._id), 1);
+    post.save();
+
+    return post;
 }
 
 exports.removePost = async (_id, userId) => {
