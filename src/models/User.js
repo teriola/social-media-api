@@ -64,17 +64,17 @@ const userSchema = new Schema({
         timestamps: true,
     });
 
-userSchema.pre('save', function (next) {
-    return bcrypt.hash(this.password, SALT_ROUNDS)
-        .then(hash => {
-            this.password = hash;
-            return next();
-        });
-});
+// userSchema.pre('save', function (next) {
+//     return bcrypt.hash(this.password, SALT_ROUNDS)
+//         .then(hash => {
+//             this.password = hash;
+//             return next();
+//         });
+// });
 
-userSchema.method('validatePassword', function (password) {
-    return bcrypt.compare(password, this.password);
-});
+// userSchema.method('validatePassword', function (password) {
+//     return bcrypt.compare(password, this.password);
+// });
 
 const User = model('User', userSchema);
 
