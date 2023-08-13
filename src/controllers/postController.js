@@ -51,6 +51,7 @@ router.get('/bookmarks',
     isAuth,
     async (req, res) => {
         const bookmarks = await getUserBookmarks(req.user._id);
+        console.log(bookmarks);
 
         res.status(200).json(bookmarks);
     });
