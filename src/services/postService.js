@@ -3,6 +3,7 @@ const Comment = require('../models/Comment');
 const Post = require("../models/Post");
 const { parsePost } = require("../utils/parser");
 const { getUser } = require("./userService");
+const User = require('../models/User');
 
 
 exports.getAllPosts = () => Post.find().select('-__v').populate('owner', 'name surname profilePicture');
@@ -101,7 +102,12 @@ exports.removePost = async (_id, userId) => {
     // Check if user is owner of post
     if (post.owner != userId) throw new Error('Not authorized');
 
+    // Find owner
+    const owner = await getUser(userId);
+
     // Delete post
+    owner.posts = owner.posts.filter(postId => postId.toString() !== _id);
+    owner.save();
     await Post.deleteOne({ _id });
 }
 
