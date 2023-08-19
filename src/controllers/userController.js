@@ -1,24 +1,23 @@
 const router = require('express').Router();
 
 const { isAuth } = require('../middlewares/authMiddleware');
-const { getUser, getUserFollowers, postUserFollower, editUser } = require('../services/userService');
-const { parseError } = require('../utils/parser');
+const { getUser, getUserFollowers, postUserFollower, editUser, deleteUserFollower} = require('../services/userService');
 
 // Get current user
 // GET /users/me
 // Private
-router.get('/me', 
+router.get('/me',
     isAuth,
     async (req, res) => {
         try {
-            const { 
+            const {
                 _id,
                 name,
                 surname,
                 email,
                 description,
                 bookmarks,
-                profilePicture, 
+                profilePicture,
                 coverPicture,
             } = await getUser(req.user._id);
 
@@ -32,7 +31,7 @@ router.get('/me',
                 profilePicture,
                 coverPicture,
             });
-        } catch(err) {
+        } catch (err) {
             res.status(404).json({ message: err.message });
         }
     });
@@ -88,13 +87,13 @@ router.get('/:id/followers', async (req, res) => {
 // Post user follower
 // POST /users/:id/follow
 // Private
-router.post('/:id/follow', 
+router.post('/:id/follow',
     isAuth,
     async (req, res) => {
         try {
             await postUserFollower(req.params.id, req.user._id);
 
-            res.status(201).json({ 
+            res.status(201).json({
                 message: 'Followed user',
             });
         } catch (err) {
@@ -102,12 +101,27 @@ router.post('/:id/follow',
         }
     });
 
-module.exports = router;
+// Delete user follower
+// DELETE /users/:id/follow
+//Private
+router.delete('/:id/follow',
+    isAuth,
+    async (req, res) => {
+        try {
+            await deleteUserFollower(req.params.id, req.user._id);
+
+            res.status(201).json({
+                message: 'Unfollowed user',
+            });
+        } catch (err) {
+            res.status(404).json({ message: err.message });
+        }
+    });
 
 // Edit user
 // PATCH /users/:id
 // Private
-router.patch('/:id', 
+router.patch('/:id',
     isAuth,
     async (req, res) => {
         try {
@@ -119,3 +133,5 @@ router.patch('/:id',
             res.status(404).json({ message: err.message });
         }
     });
+
+module.exports = router;
